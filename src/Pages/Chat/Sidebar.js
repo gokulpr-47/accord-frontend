@@ -1,34 +1,18 @@
-import React, {useContext, useState} from 'react';
+import React from 'react';
 import { slide as Menu } from 'react-burger-menu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
-import windows from '../../Context/WindowSizeContext'
-import { useEffect } from 'react';
 import Split from 'react-split'
 import Server from './Server'
 import Channel from './Channel'
 
 export default props => {
-    
-    const users = useContext(windows);
-
-    const [show, setShow] = useState(false)
-
-    useEffect(()=>{
-        if(users.innerWidth>992){
-            setShow(true)
-        }
-        else{
-            setShow(false)
-        }
-        console.log(show)
-    },[users])
     return (
         <Menu 
-            isOpen={show} 
-            customBurgerIcon={ !show && <FontAwesomeIcon icon={faBars} /> }
-            customCrossIcon={ !show && <FontAwesomeIcon icon={faBars} /> }
-            disableOverlayClick={ show }
+            isOpen={true} 
+            customBurgerIcon={  <FontAwesomeIcon icon={faBars} /> }
+            customCrossIcon={ <FontAwesomeIcon icon={faBars} /> }
+            className="menu-container"
         >
             <div className="chat-container">
                 <Split
@@ -37,7 +21,7 @@ export default props => {
                     minSize={5}
                     expandToMin={false}
                     gutterSize={0}
-                    snapOffset={30} 
+                    snapOffset={30}
                     dragInterval={1}
                     direction="horizontal"
                     cursor="col-resize"
@@ -45,7 +29,7 @@ export default props => {
                     <Server />
                     <Channel />
                 </Split>
-            </div>         
+            </div>
         </Menu>
     );
 };

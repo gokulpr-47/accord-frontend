@@ -1,69 +1,74 @@
-// import { useState } from 'react'
-// import Channel from './Channel'
-// import Server from './Server'
-// import Messaging from './Messaging'
-// import Split from 'react-split'
-// import './chat.css'
-
-// export default function Chat(){
-//     const [server, setServer] = useState([1])
-
-//     return(
-//         <div className="chat-container">
-//             <Split
-//                 className="container-split"
-//                 sizes={[5, 20, 75]}
-//                 minSize={5}
-//                 expandToMin={false}
-//                 gutterSize={0}
-//                 snapOffset={30} 
-//                 dragInterval={1}
-//                 direction="horizontal"
-//                 cursor="col-resize"
-//             >
-//                 <Server server={server} />
-//                 <Channel />
-//                 <Messaging />
-//             </Split>
-//         </div>
-//     )
-// }
-
-import React, {useEffect} from 'react';
+import React, { useState, useContext } from 'react';
 import SideBar from './Sidebar';
-import { useState, createContext } from 'react'
 import './chat.css';
-import windows from '../../Context/WindowSizeContext'
+import { useMediaQuery } from 'react-responsive'
+import Server from './Server'
+import Channel from './Channel'
 import Messaging from './Messaging'
-
-function getWindowSize() {
-    const {innerWidth, innerHeight} = window;
-    return {innerWidth, innerHeight};
-}
+import Split from 'react-split'
+import InfoContext from '../../Context/InfoContext'
+// import Nav from 'react-bootstrap/Nav';
 
 export default function Chat() {
-    const [ windowSize, setWindowSize ] = useState(getWindowSize());
+    
+    const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 992px)' })
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 992px)' })
 
-    useEffect(() => {
-        function handleWindowResize() {
-            setWindowSize(getWindowSize());
-        }
-
-        window.addEventListener('resize', handleWindowResize);
-
-        return () => {
-            window.removeEventListener('resize', handleWindowResize);
-        };
-    },[]); 
+    const [ info, setInfo ] = useState(false);
+    
+    function pop(){
+        setInfo((prevState)=> !prevState);
+    }
 
     return (
-        <div id="App">
-            <windows.Provider value={windowSize}>
-                <SideBar width={windowSize}/>
-            </windows.Provider>
-            <div id="page-wrap">
-                <Messaging/>
-            </div>
-        </div>
+        <>
+            { isTabletOrMobile &&
+                <div id="App">
+                    <InfoContext.Provider value={{ info, setInfo, pop}}>
+                        <SideBar/>
+                    </InfoContext.Provider>
+                    <>
+                        <div id="page-wrap">
+                            <Messaging/>
+                        </div>
+                    </>
+                </div>
+            }
+            { isDesktopOrLaptop && 
+                <div className="chat-container">
+                    <Split
+                        className="container-split"
+                        sizes={[5, 20, 75]}
+                        minSize={5}
+                        expandToMin={false}
+                        gutterSize={0}
+                        snapOffset={30} 
+                        dragInterval={1}
+                        direction="horizontal"
+                        cursor="col-resize"
+                    >
+                        <InfoContext.Provider value={{info,setInfo,pop}}>
+                            <Server />
+                        </InfoContext.Provider>
+                        <Channel />
+                        <Messaging />
+                    </Split>
+                </div>
+            }
+            { info && 
+                <div className="popup" onClick={(e)=> e.currentTarget === e.target && pop()}>
+                    <div className="popup-container">  
+                        {/* <Nav fill variant="tabs" defaultActiveKey="/home">
+                            <Nav.Item>
+                                <Nav.Link href="/signup">Active</Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>      
+                                <Nav.Link href="/signin">Loooonger NavLink</Nav.Link>
+                            </Nav.Item>
+                        </Nav> */}
+                    </div>
+                </div>
+            }
+        </>
     );
-}
+} 
