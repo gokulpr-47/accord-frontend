@@ -175,23 +175,3 @@
  	color: #b8b7ad;
 }
 
-/* react-popup*/
-
-.popup{
-	position: fixed;
-	top:0;
-	left:0;
-	display:flex;
-	justify-content:center;
-	align-items: center;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0,0,0,0.6);
-}
-
-.popup-container{
-	display: flex;
-	width: 500px;
-	height: 200px;
-	background: red;
-}

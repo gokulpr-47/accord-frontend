@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {Container} from 'react-bootstrap'
+// import {Container} from 'react-bootstrap'
 import "./Signin.css"
 import axios from 'axios'
 
@@ -38,7 +38,7 @@ export default function Login(){
     }
 
     return(
-        <Container>
+        // <Container>
             <div className='login-box'>
                 <div className="login-container">
                     <h1>SIGN IN</h1>
@@ -64,6 +64,6 @@ export default function Login(){
                     <p>Don't have an account? Sign Up</p>
                 </div>
             </div>
-        </Container>
+        // </Container>
     )
 }

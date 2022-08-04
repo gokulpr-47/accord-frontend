@@ -1,12 +1,15 @@
 import { useState, useContext} from 'react'
 import InfoContext from '../../Context/InfoContext'
+import ServersContext from '../../Context/ServersContext'
 
 export default function Server(){
-    const [servers, setServers] = useState([{server_name: 'server 1'}]);
 
     const info = useContext(InfoContext)
+    const serverC = useContext(ServersContext)
 
-    const element = servers.map((server) => (
+    console.log(serverC.servers)
+
+    const element = serverC.servers.map((server) => (
         <div className="server-container">
             <p>{server.server_name.match(/\b(\w)/g).join('')}</p>
         </div>  

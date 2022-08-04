@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import SideBar from './Sidebar';
 import './chat.css';
 import { useMediaQuery } from 'react-responsive'
@@ -7,26 +7,31 @@ import Channel from './Channel'
 import Messaging from './Messaging'
 import Split from 'react-split'
 import InfoContext from '../../Context/InfoContext'
-// import Nav from 'react-bootstrap/Nav';
+import Popup from './Popup/Popup';
+import ServersContext from '../../Context/ServersContext'
 
 export default function Chat() {
     
     const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 992px)' })
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 992px)' })
 
-    const [ info, setInfo ] = useState(false);
+    const [ info, setInfo ] = useState(false);    
+    const [servers, setServers] = useState([{server_name: 'server 1'}]);
     
     function pop(){
         setInfo((prevState)=> !prevState);
+        console.log(info)
     }
 
     return (
         <>
             { isTabletOrMobile &&
                 <div id="App">
-                    <InfoContext.Provider value={{ info, setInfo, pop}}>
-                        <SideBar/>
-                    </InfoContext.Provider>
+                    <ServersContext.Provider value = {{ servers, setServers}}>
+                        <InfoContext.Provider value={{ info, setInfo, pop}}>
+                            <SideBar/>
+                        </InfoContext.Provider>
+                    </ServersContext.Provider>
                     <>
                         <div id="page-wrap">
                             <Messaging/>
@@ -47,28 +52,24 @@ export default function Chat() {
                         direction="horizontal"
                         cursor="col-resize"
                     >
-                        <InfoContext.Provider value={{info,setInfo,pop}}>
-                            <Server />
-                        </InfoContext.Provider>
+                        
+                        <ServersContext.Provider value = {{ servers, setServers}}>
+                            <InfoContext.Provider value={{info,setInfo,pop}}>
+                                <Server />
+                            </InfoContext.Provider>
+                        </ServersContext.Provider>
                         <Channel />
                         <Messaging />
                     </Split>
                 </div>
             }
             { info && 
-                <div className="popup" onClick={(e)=> e.currentTarget === e.target && pop()}>
-                    <div className="popup-container">  
-                        {/* <Nav fill variant="tabs" defaultActiveKey="/home">
-                            <Nav.Item>
-                                <Nav.Link href="/signup">Active</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>      
-                                <Nav.Link href="/signin">Loooonger NavLink</Nav.Link>
-                            </Nav.Item>
-                        </Nav> */}
-                    </div>
-                </div>
-            }
+                <ServersContext.Provider value = {{ servers, setServers}}>
+                    <InfoContext.Provider value={{ info, setInfo, pop }}>
+                        <Popup />
+                    </InfoContext.Provider> 
+                </ServersContext.Provider>
+            }          
         </>
     );
 } 
