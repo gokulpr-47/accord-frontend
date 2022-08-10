@@ -9,25 +9,31 @@ import Split from 'react-split'
 import InfoContext from '../../Context/InfoContext'
 import Popup from './Popup/Popup';
 import ServersContext from '../../Context/ServersContext'
+import {nanoid} from 'nanoid'
 
-export default function Chat() {
-    
+export default function Chat() {    
     const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 992px)' })
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 992px)' })
 
-    const [ info, setInfo ] = useState(false);    
-    const [servers, setServers] = useState([{server_name: 'server 1'}]);
-    
+    const [ info, setInfo ] = useState(false);
+    const [servers, setServers] = useState([
+        {
+            server_name: 'server 1',
+            channels: ['channel 1', 'channel 2'],
+            id: nanoid()
+        }
+    ]);
+    const [ activeServer, setActiveServer ] = useState(0)
+
     function pop(){
         setInfo((prevState)=> !prevState);
-        console.log(info)
     }
 
     return (
         <>
             { isTabletOrMobile &&
                 <div id="App">
-                    <ServersContext.Provider value = {{ servers, setServers}}>
+                    <ServersContext.Provider value = {{ servers, setServers, activeServer, setActiveServer }}>
                         <InfoContext.Provider value={{ info, setInfo, pop}}>
                             <SideBar/>
                         </InfoContext.Provider>
@@ -51,15 +57,14 @@ export default function Chat() {
                         dragInterval={1}
                         direction="horizontal"
                         cursor="col-resize"
-                    >
-                        
-                        <ServersContext.Provider value = {{ servers, setServers}}>
+                    >                        
+                        <ServersContext.Provider value = {{ servers, setServers, activeServer, setActiveServer }}>
                             <InfoContext.Provider value={{info,setInfo,pop}}>
                                 <Server />
+                                <Channel />
+                                <Messaging />
                             </InfoContext.Provider>
                         </ServersContext.Provider>
-                        <Channel />
-                        <Messaging />
                     </Split>
                 </div>
             }

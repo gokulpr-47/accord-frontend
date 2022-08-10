@@ -42,14 +42,37 @@
 }
 
 .new-join{
-	background: #00D5F2;
+	background: var(--blue);
 }
 
 /* Channel.js  */
 .channel{
     display:flex;
-    justify-content: center;
-    padding: 10px;
+	flex-direction: column;
+    align-items: center;
+	padding: 60px 10px 0;
+}
+
+.channel > h1{
+	color: var(--blue);
+	font-size: 40px;
+	margin-bottom: 15px;
+}
+
+.channel > h2{
+	border-bottom: 1px solid var(--blue);
+	margin-bottom: 20px;
+}
+
+.channels-header{
+	display: flex;
+    width: 79%;
+    justify-content: space-between;
+	border-bottom: 1px solid var(--blue)
+}
+
+.addChannel:hover{
+	cursor: pointer;
 }
 
 /* Messaging.js  */

@@ -9,8 +9,7 @@ export default function CreateRoom(){
     const name = useContext(CreateRoomContext)
     const info = useContext(InfoContext)
     const serverC = useContext(ServersContext)
-
-    console.log(serverC)
+    
     function handleChange(event){
         const {value} = event.target;
         name.setRoomName(value)
@@ -20,7 +19,10 @@ export default function CreateRoom(){
         e.preventDefault()
         serverC.setServers(prevState => [
             ...prevState,
-            {server_name: name.roomName}
+            {
+                server_name: name.roomName,
+                channels: []
+            }
         ])
         info.pop()
     }

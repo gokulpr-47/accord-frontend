@@ -23,10 +23,6 @@ export default function Popup(){
         setActiveTab("tab2");
     };
 
-    useEffect(() => {
-        console.log(roomName)
-    },[roomName])
-
     return(
         <div className="popup" onClick={(e)=> e.currentTarget === e.target && pop.pop()}>
             <div className="popup-container">  
