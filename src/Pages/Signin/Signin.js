@@ -2,8 +2,11 @@ import {useState} from 'react'
 // import {Container} from 'react-bootstrap'
 import "./Signin.css"
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 export default function Login(){
+
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -37,6 +40,10 @@ export default function Login(){
         console.log(formData)
     }
 
+    function navigateSignup(){
+        navigate('/signup')
+    }
+
     return(
         // <Container>
             <div className='login-box'>
@@ -61,7 +68,7 @@ export default function Login(){
                         />
                         <button onClick={sendData}> SIGN IN</button>
                     </form>
-                    <p>Don't have an account? Sign Up</p>
+                    <p>Don't have an account? <a onClick={navigateSignup}>Sign Up</a></p>
                 </div>
             </div>
         // </Container>

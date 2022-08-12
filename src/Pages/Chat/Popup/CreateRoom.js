@@ -3,6 +3,7 @@ import InfoContext from "../../../Context/InfoContext";
 import { useContext } from "react";
 import './popup.css'
 import ServersContext from "../../../Context/ServersContext";
+import { nanoid } from 'nanoid'
 
 export default function CreateRoom(){
 
@@ -21,7 +22,14 @@ export default function CreateRoom(){
             ...prevState,
             {
                 server_name: name.roomName,
-                channels: []
+                channels: [{
+                    channel_name: 'channel 1',
+                    chats: [{
+                        name: 'Gokul P R',
+                        message: 'This text goes here'
+                    }]
+                }],
+                id: nanoid()
             }
         ])
         info.pop()
