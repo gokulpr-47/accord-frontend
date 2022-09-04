@@ -4,33 +4,36 @@ import { useContext, useState, useRef, useEffect } from 'react'
 import ServersContext from '../../Context/ServersContext'
 
 export default function Messaging(){
-    const { servers, setServers, activeServer, activeChannel, user } = useContext(ServersContext)
+    const { servers, setServers, activeServer, activeChannel, setActiveChannel, user } = useContext(ServersContext)
     const [ newChat, setNewChats ] = useState()
-    
     const bottomRef = useRef(null);
 
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({behavior: 'smooth'});
-        console.log('changed')
+        bottomRef.current?.scrollIntoView({behavior: 'smooth'});    
     }, [newChat]);
+    console.log(servers[activeServer])
 
-    let element = servers[activeServer].channels[activeChannel].chats.map(data => {
-        return(
-            <div className="chats">
-                <div className="user-icon">
-                    <p>{data.name.match(/\b(\w)/g).join('').slice(0,2)}</p>
-                </div>
-                <div className="user-chat-container">
-                    <div className="user-name">
-                        <h4>{data.name}</h4>
+    
+    let element = servers[activeServer]?.channels[activeChannel]?.chats.length !== 0 ? 
+            servers[activeServer]?.channels[activeChannel]?.chats?.map(data => {
+            return(
+                <div className="chats">
+                    <div className="user-icon">
+                        <p>{data?.name?.match(/\b(\w)/g).join('').slice(0,2)}</p>
                     </div>
-                    <div className="user-chat">
-                        <p>{data.message}</p>
+                    <div className="user-chat-container">
+                        <div className="user-name">
+                            <h4>{data.name}</h4>
+                        </div>
+                        <div className="user-chat">
+                            <p>{data.message}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        )
-    })
+            )
+        }):
+        ' '
+
 
     function handleChange(e){
         const {value} = e.target;
@@ -45,7 +48,6 @@ export default function Messaging(){
             name: user,
             message: newChat
         })
-        console.log(chats);
         let temp_state = [...servers]
         let temp_element = { ...temp_state[activeServer]}
         temp_element.channels[activeChannel].chats = chats
@@ -57,7 +59,7 @@ export default function Messaging(){
     return(
         <div className="messaging">
             <div className="messaging-header">
-                <h2>{servers[activeServer].channels[activeChannel].channel_name}</h2>
+                <h2>{servers[activeServer]?.channels[activeChannel]?.channel_name}</h2>
             </div>
             <div className="messaging-chatarea">
                 {element}
@@ -72,7 +74,7 @@ export default function Messaging(){
                         placeholder="Enter text here...." 
                         onChange={handleChange}
                         value={newChat}
-                    />                    
+                    />
                 </form>
             </div>
         </div>

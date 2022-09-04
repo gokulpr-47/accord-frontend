@@ -10,31 +10,23 @@ import InfoContext from '../../Context/InfoContext'
 import Popup from './Popup/Popup';
 import ServersContext from '../../Context/ServersContext'
 import {nanoid} from 'nanoid'
+import UserContext from '../../Context/UserContext';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import Signin from '../Signin/Signin';
+import useAuth from '../../hooks/useAuth'
 
 export default function Chat() {
     const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 992px)' })
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 992px)' })
 
+    
+    const { auth, persist } = useAuth()
+
+    const { user, setUser, isLoggedIn, setIsLoggedIn } = useContext(UserContext)
     const [ info, setInfo ] = useState(false);
-    const [servers, setServers] = useState([
-        {
-            server_name: 'server 1',
-            channels: [{
-                channel_name: 'channel 1',
-                chats: [{
-                    name: 'Accord',
-                    message: 'This is a new channel'
-                }]
-            }],
-            id: nanoid()
-        }
-    ]);
+    const [ servers, setServers] = useState();
     const [ activeServer, setActiveServer ] = useState(0)
     const [ activeChannel, setActiveChannel ] = useState(0)
-    const [ user, setUser ] = useState('Gokul')
-
-    console.log(activeServer)
-    console.log(activeChannel);
 
     function pop(){
         setInfo((prevState)=> !prevState);
@@ -51,14 +43,19 @@ export default function Chat() {
                         setActiveServer, 
                         activeChannel, 
                         setActiveChannel,
-                        user
+                        user,
+                        setUser
                     }}>
                         <InfoContext.Provider value={{ info, setInfo, pop}}>
                             <SideBar/>
                         </InfoContext.Provider>
                         <>
                             <div id="page-wrap">
-                                <Messaging/>
+                                {
+                                    servers?
+                                        <Messaging/>:
+                                        <p>Loading...</p>
+                                }
                             </div>
                         </>
                     </ServersContext.Provider>
@@ -83,12 +80,18 @@ export default function Chat() {
                             setActiveServer, 
                             activeChannel, 
                             setActiveChannel,
-                            user
+                            user,
+                            setUser
                         }}>
                             <InfoContext.Provider value={{info,setInfo,pop}}>
                                 <Server />
-                                <Channel />
-                                <Messaging />
+                                { servers ? 
+                                    <>
+                                        <Channel />
+                                        <Messaging />
+                                    </>:
+                                    <p>loading</p>
+                                }
                             </InfoContext.Provider>
                         </ServersContext.Provider>
                     </Split>

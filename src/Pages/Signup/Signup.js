@@ -1,46 +1,126 @@
 import axios from 'axios'
-import {useState} from 'react'
+import {useState, useContext, useRef, useEffect} from 'react'
 // import {Container} from 'react-bootstrap'
 import "./signup.css"
-import Signin from '../Signin/Signin'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
+import UserContext from '../../Context/UserContext'
+import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
+const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 
 export default function Signup(){
 
+    const userRef = useRef();
+    const errRef = useRef();
+
     const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/';
+    const { setUser, setAuthEmail } = useContext(UserContext)
 
-    const [formData, setFormData] = useState({
-        email: "",
-        username: "",
-        password: ""
-    })
+    // const [formData, setFormData] = useState({
+    //     email: "",
+    //     username: "",
+    //     password: ""
+    // })
 
-    const sendData = () => {
-        axios({
-            method: 'POST',
-            data:{
-                'username': formData.username,
-                'email': formData.email,
-                'password': formData.password
-            },
-            withCredential: true,
-            url: 'http://localhost:3001/signup'
-        })
-    }
+    const [ email, setEmail ] = useState();
+    const [ validEmail, setValidEmail ] = useState(false);
+    const [ emailFocus, setEmailFocus ] = useState(false)
 
-    function handleChange(event){
-        const {name, value} = event.target
-        setFormData(prevFormData => {
-            return{
-                ...prevFormData,
-                [name]: value
-            }
-        })
-    }
+    const [ username, setUsername ] = useState();
+    const [ validUsername, setValidUsername ] = useState(false);
+    const [ usernameFocus, setUsernameFocus ] = useState(false)
 
-    function handleSubmit(event){
+    const [ password, setPassword ] = useState();
+    const [ validPassword, setValidPassword ] = useState(false)
+    const [ passwordFocus, setPasswordFocus ] = useState(false)
+    
+    const [errMsg, setErrMsg] = useState('');
+    const [success, setSuccess] = useState(false);
+
+    useEffect(() => {
+        userRef.current.focus();
+    }, [])
+
+    useEffect(() => {
+        setValidUsername(USER_REGEX.test(username));
+    }, [username])
+
+    useEffect(() => {
+        setValidPassword(PWD_REGEX.test(password));
+    }, [password])
+
+    useEffect(() => {
+        setValidEmail(EMAIL_REGEX.test(email))
+    }, [email])
+
+    useEffect(() => {
+        setErrMsg('');
+    }, [username, password, email])
+
+    // const sendData = () => {
+    //     axios({
+    //         method: 'POST',
+    //         data:{
+    //             'username': formData.username,
+    //             'email': formData.email,
+    //             'password': formData.password
+    //         },
+    //         withCredential: true,
+    //         url: 'http://localhost:3001/signup'
+    //     }).then(res => {
+    //         console.log(res.data.message)
+    //         console.log(res.data.result.username)
+    //         setUser(res.data.result.username)
+    //         navigate('/')
+    //     })
+    // }
+
+    // function handleChange(event){
+    //     const {name, value} = event.target
+    //     setFormData(prevFormData => {
+    //         return{
+    //             ...prevFormData,
+    //             [name]: value
+    //         }
+    //     })
+    // }
+
+    const handleSubmit = async (event) => {
         event.preventDefault()
-        console.log(formData)
+
+        const response = await axios.post('/signup',
+            JSON.stringify({ username, password, email }),
+            {
+                headers: {'Content-Type': 'application/json'},
+                withCredentials: true
+            }
+        )
+        setUser(response.data.result.username)
+        setAuthEmail(response.data.result.email)
+        localStorage.setItem('username', response.data.result.username)
+        localStorage.setItem('email', response.data.result.email)
+        navigate(from, {replace: true})
+
+        // axios({
+        //     method: 'POST',
+        //     data:{
+        //         'username': formData.username,
+        //         'email': formData.email,
+        //         'password': formData.password
+        //     },
+        //     withCredential: true,
+        //     url: 'http://localhost:3001/signup'
+        // }).then(res => {
+        //     console.log(res.data.message)
+        //     console.log(res.data.result.username)
+        //     setUser(res.data.result.username)
+        //     navigate('/')
+        // })
     }
 
     function navigateSignin(){
@@ -50,32 +130,68 @@ export default function Signup(){
     return(
         <div className='signup-box'>
             <div className="signup-container">
+            <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
                 <h1>SIGN UP</h1>
                 <form onSubmit={handleSubmit}>
                     <input 
                         type="email" 
                         name="email"
-                        placeholder="Email"                            
-                        value={FormData.email}
-                        onChange={handleChange}
+                        placeholder="Email"
+                        ref={userRef}
+                        autoComplete='off' 
+                        required
+                        aria-invalid={validEmail ? "false" : "true"}
+                        aria-describedby="emailnote"                            
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        onFocus={() => setEmailFocus(true)}
+                        onBlur={() => setEmailFocus(false)}
                     />
+                    {/* <p id="emailnote" className={emailFocus && email && !validEmail ? "instructions" : "offscreen"}>
+                        <FontAwesomeIcon icon={faInfoCircle} />
+                        4 to 24 characters.<br />
+                        Must begin with a letter.<br />
+                        Letters, numbers, underscores, hyphens allowed.
+                    </p> */}
                     <input
                         type="text" 
                         name="username" 
-                        autoComplete="off" 
+                        autoComplete="off"
                         placeholder="Username" 
-                        onChange={handleChange}
-                        value={FormData.username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        value={username}
+                        required                        
+                        aria-invalid={validUsername ? "false" : "true"}
+                        aria-describedby="uidnote"  
+                        onFocus={() => setUsernameFocus(true)}
+                        onBlur={() => setUsernameFocus(false)}
                     />
+                    {/* <p id="uidnote" className={usernameFocus && username && !validUsername ? "instructions" : "offscreen"}>
+                        <FontAwesomeIcon icon={faInfoCircle} />
+                        4 to 24 characters.<br />
+                        Must begin with a letter.<br />
+                        Letters, numbers, underscores, hyphens allowed.
+                    </p> */}
                     <input 
                         type="password" 
                         name="password" 
                         autoComplete="off"
                         placeholder="Password" 
-                        onChange= {handleChange}
-                        value= {FormData.password}
+                        onChange= {(e) => setPassword(e.target.value)}
+                        value= {password}
+                        required
+                        aria-invalid={validPassword ? "false" : "true"}
+                        aria-describedby="pwdnote"
+                        onFocus={() => setPasswordFocus(true)}
+                        onBlur={() => setPasswordFocus(false)}
                     />
-                    <button onClick={sendData}> SIGN UP</button>
+                    {/* <p id="pwdnote" className={passwordFocus && !validPassword ? "instructions" : "offscreen"}>
+                        <FontAwesomeIcon icon={faInfoCircle} />
+                        8 to 24 characters.<br />
+                        Must include uppercase and lowercase letters, a number and a special character.<br />
+                        Allowed special characters: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
+                    </p> */}
+                    <button> SIGN UP</button>
                 </form>
                 <p>Don't have an account? <a onClick={navigateSignin}>SignIn</a></p>
             </div>

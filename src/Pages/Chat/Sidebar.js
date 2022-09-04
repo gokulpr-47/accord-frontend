@@ -1,12 +1,15 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { slide as Menu } from 'react-burger-menu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import Split from 'react-split'
 import Server from './Server'
 import Channel from './Channel'
+import ServersContext from '../../Context/ServersContext'
 
 export default props => {
+    
+    const {servers} = useContext(ServersContext)    
     return (
         <Menu 
             isOpen={true} 
@@ -27,7 +30,11 @@ export default props => {
                     cursor="col-resize"
                 >
                     <Server />
-                    <Channel />
+                    {
+                        servers?
+                            <Channel />:
+                            <p>Loading...</p>
+                    }
                 </Split>
             </div>
         </Menu>

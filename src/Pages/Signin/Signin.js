@@ -1,43 +1,75 @@
-import {useState} from 'react'
-// import {Container} from 'react-bootstrap'
+import { useState, useContext, useRef, useEffect } from 'react'
 import "./Signin.css"
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import axios from '../../api/axios'
+import { useNavigate, useLocation } from 'react-router-dom'
+import UserContext from '../../Context/UserContext'
+import useAuth from '../../hooks/useAuth'
 
-export default function Login(){
+export default function Signin(){
+
+    const { auth, setAuth, persist, setPersist } = useAuth();
+
+    const { setUser } = useContext(UserContext)
 
     const navigate = useNavigate();
+    const location = useLocation ();
+    const from = location.state?.from?.pathname || '/';
 
-    const [formData, setFormData] = useState({
-        email: "",
-        password: ""
-    })
-    
-    const sendData = () =>{
-        axios({
-            method: "POST",
-            data: {
-                email: formData.email,
-                password: formData.password,
-            },
-            withCredential: true,
-            url: "http://localhost:3001/signin"
-        })
-    }
+    const userRef = useRef();
+    const errRef = useRef();
 
-    function handleChange(event){
-        const {name, value} = event.target
-        setFormData(prevFormData => {
-            return{
-                ...prevFormData,
-                [name]: value
-            }
-        })
-    }
+    // const [formData, setFormData] = useState({
+    //     email: "",
+    //     password: ""
+    // })
+    const [ email, setEmail ] = useState('');
+    const [ password, setPassword ] = useState('');
+    const [errMsg, setErrMsg] = useState('');
 
-    function handleSubmit(event){
+    useEffect(()=>{
+        userRef.current.focus();
+    }, [])
+
+    useEffect(()=>{
+        setErrMsg('')
+    },[email,password])
+
+    const handleSubmit = async (event) => {
         event.preventDefault()
-        console.log(formData)
+
+        try{
+            const response = await axios.post('/signin',
+                JSON.stringify({ email, password }),
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
+                }
+            );
+            console.log(JSON.stringify(response?.data));
+            setUser(response.data.user.username)
+            // setAuthEmail(response.data.user.email)
+            // localStorage.setItem('username', response.data.user.username)
+            // localStorage.setItem('email', response.data.user.email)
+            const accessToken = response?.data?.accessToken;
+            const user = response.data.user.username;
+            await setAuth({ email, user, accessToken }) 
+            await setPersist(true);
+            console.log('log persist: ', persist)
+            localStorage.setItem('persist', persist);
+            navigate(from, { replace: true});
+        } catch(err){
+            console.log(err)
+            if(!err?.response){
+                setErrMsg('No Server Response');
+            } else if( err.response?.status === 400){
+                setErrMsg('Missing email or password')
+            } else if (err.response?.status === 401) {
+                setErrMsg('Unauthorized');
+            } else {
+                setErrMsg('Login Failed');
+            }
+            errRef.current.focus();
+        }
     }
 
     function navigateSignup(){
@@ -48,25 +80,27 @@ export default function Login(){
         // <Container>
             <div className='login-box'>
                 <div className="login-container">
+                <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
                     <h1>SIGN IN</h1>
                     <form onSubmit={handleSubmit}>
                         <input
                             type="email" 
                             name="email" 
+                            ref={userRef}
                             autoComplete="off" 
                             placeholder="Email" 
-                            onChange={handleChange}
-                            value={FormData.email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            value={email}
                         />
                         <input 
                             type="password" 
                             name="password" 
                             autoComplete="off"
                             placeholder="Password" 
-                            onChange= {handleChange}
-                            value= {FormData.password}
+                            onChange= {(e) => setPassword(e.target.value)}
+                            value= {password}
                         />
-                        <button onClick={sendData}> SIGN IN</button>
+                        <button> SIGN IN</button>
                     </form>
                     <p>Don't have an account? <a onClick={navigateSignup}>Sign Up</a></p>
                 </div>

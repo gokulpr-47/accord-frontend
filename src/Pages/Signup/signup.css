@@ -75,3 +75,7 @@ form > button:hover{
 .signup-container > p > a{
     color: var(--blue);
 }
+
+/* .offscreen{
+    display: none;
+} */
