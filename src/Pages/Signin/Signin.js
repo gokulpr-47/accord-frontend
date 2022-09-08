@@ -13,7 +13,7 @@ export default function Signin(){
 
     const navigate = useNavigate();
     const location = useLocation ();
-    const from = location.state?.from?.pathname || '/';
+    const from = location.state?.from?.pathname || '/channels';
 
     const userRef = useRef();
     const errRef = useRef();
@@ -45,16 +45,12 @@ export default function Signin(){
                     withCredentials: true
                 }
             );
-            console.log(JSON.stringify(response?.data));
-            setUser(response.data.user.username)
-            // setAuthEmail(response.data.user.email)
-            // localStorage.setItem('username', response.data.user.username)
-            // localStorage.setItem('email', response.data.user.email)
+            setUser(response.data.user.username) //don't need 
             const accessToken = response?.data?.accessToken;
             const user = response.data.user.username;
+            console.log(response)
             await setAuth({ email, user, accessToken }) 
             await setPersist(true);
-            console.log('log persist: ', persist)
             localStorage.setItem('persist', persist);
             navigate(from, { replace: true});
         } catch(err){

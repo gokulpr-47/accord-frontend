@@ -14,11 +14,13 @@ import UserContext from '../../Context/UserContext';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Signin from '../Signin/Signin';
 import useAuth from '../../hooks/useAuth'
+import { useParams } from 'react-router-dom';
 
 export default function Chat() {
     const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 992px)' })
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 992px)' })
 
+    const { serverId, channelId } = useParams()
     
     const { auth, persist } = useAuth()
 
@@ -27,6 +29,8 @@ export default function Chat() {
     const [ servers, setServers] = useState();
     const [ activeServer, setActiveServer ] = useState(0)
     const [ activeChannel, setActiveChannel ] = useState(0)
+    const [ dbContent, setDbContent] = useState(0)
+    const [ home, setHome ] = useState();
 
     function pop(){
         setInfo((prevState)=> !prevState);
@@ -44,7 +48,9 @@ export default function Chat() {
                         activeChannel, 
                         setActiveChannel,
                         user,
-                        setUser
+                        setUser,
+                        dbContent,
+                        setDbContent
                     }}>
                         <InfoContext.Provider value={{ info, setInfo, pop}}>
                             <SideBar/>
@@ -65,7 +71,7 @@ export default function Chat() {
                 <div className="chat-container">
                     <Split
                         className="container-split"
-                        sizes={[5, 20, 75]}
+                        sizes={[5, 95]}
                         minSize={5}
                         expandToMin={false}
                         gutterSize={0}
@@ -81,15 +87,20 @@ export default function Chat() {
                             activeChannel, 
                             setActiveChannel,
                             user,
-                            setUser
+                            setUser,
+                            dbContent,
+                            setDbContent,
+                            home,
+                            setHome
                         }}>
                             <InfoContext.Provider value={{info,setInfo,pop}}>
-                                <Server />
-                                { servers ? 
+                                <Server/>
+                                { servers || !dbContent ? 
                                     <>
-                                        <Channel />
+                                        <Channel/>
                                         <Messaging />
-                                    </>:
+                                    </>
+                                    :
                                     <p>loading</p>
                                 }
                             </InfoContext.Provider>
@@ -98,7 +109,7 @@ export default function Chat() {
                 </div>
             }
             { info && 
-                <ServersContext.Provider value = {{ servers, setServers}}>
+                <ServersContext.Provider value = {{ servers, setServers, dbContent, setDbContent}}>
                     <InfoContext.Provider value={{ info, setInfo, pop }}>
                         <Popup />
                     </InfoContext.Provider> 

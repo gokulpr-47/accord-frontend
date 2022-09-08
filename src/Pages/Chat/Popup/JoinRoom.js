@@ -3,32 +3,38 @@ import InfoContext from '../../../Context/InfoContext';
 import ServersContext from '../../../Context/ServersContext';
 import axios from 'axios'
 import UserContext from '../../../Context/UserContext';
+import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
+import useAuth from '../../../hooks/useAuth';
 
 export default function JoinRoom(){
     const [ code, setCode ] = useState()
     const info = useContext(InfoContext)
     const { authEmail } = useContext(UserContext)
-    const {servers, setServers} = useContext(ServersContext)
+    const {servers, setServers, setDbContent} = useContext(ServersContext)
+    const axiosPrivate = useAxiosPrivate()
+    const { auth } = useAuth();
 
     function handleChange(event){
         const {value} = event.target;
         setCode(value)
     }
+    const email = auth.email
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const response = await axios.post('/joinServer',
-            JSON.stringify({ code, authEmail }),
+        const response = await axiosPrivate.post('/joinServer',
+            JSON.stringify({ code, email }),
             {
                 headers: {'Content-Type': 'application/json'},
                 withCredentials: true
             }
-        )   
-        setServers(prevState => [
-            ...prevState,
-            response.data.servers
-        ])
-        // console.log(response.data.servers)
+        )
+        const res = await axiosPrivate.get('/createServer',{
+            params: { "email": email }
+        }) 
+        console.log('server.js dbserver content: ', res.data.dbserver)
+        await setServers(res.data.dbserver)
+        await setDbContent(res.data.dbserver.length)
         info.pop()
     }
 

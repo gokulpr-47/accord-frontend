@@ -4,8 +4,7 @@ import {useState, useContext, useRef, useEffect} from 'react'
 import "./signup.css"
 import { useNavigate, useLocation } from 'react-router-dom'
 import UserContext from '../../Context/UserContext'
-import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
@@ -16,9 +15,11 @@ export default function Signup(){
     const userRef = useRef();
     const errRef = useRef();
 
+    const axiosPrivate = useAxiosPrivate();
+
     const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || '/';
+    const from = location.state?.from?.pathname || '/signin';
     const { setUser, setAuthEmail } = useContext(UserContext)
 
     // const [formData, setFormData] = useState({
@@ -62,34 +63,6 @@ export default function Signup(){
         setErrMsg('');
     }, [username, password, email])
 
-    // const sendData = () => {
-    //     axios({
-    //         method: 'POST',
-    //         data:{
-    //             'username': formData.username,
-    //             'email': formData.email,
-    //             'password': formData.password
-    //         },
-    //         withCredential: true,
-    //         url: 'http://localhost:3001/signup'
-    //     }).then(res => {
-    //         console.log(res.data.message)
-    //         console.log(res.data.result.username)
-    //         setUser(res.data.result.username)
-    //         navigate('/')
-    //     })
-    // }
-
-    // function handleChange(event){
-    //     const {name, value} = event.target
-    //     setFormData(prevFormData => {
-    //         return{
-    //             ...prevFormData,
-    //             [name]: value
-    //         }
-    //     })
-    // }
-
     const handleSubmit = async (event) => {
         event.preventDefault()
 
@@ -102,25 +75,7 @@ export default function Signup(){
         )
         setUser(response.data.result.username)
         setAuthEmail(response.data.result.email)
-        localStorage.setItem('username', response.data.result.username)
-        localStorage.setItem('email', response.data.result.email)
         navigate(from, {replace: true})
-
-        // axios({
-        //     method: 'POST',
-        //     data:{
-        //         'username': formData.username,
-        //         'email': formData.email,
-        //         'password': formData.password
-        //     },
-        //     withCredential: true,
-        //     url: 'http://localhost:3001/signup'
-        // }).then(res => {
-        //     console.log(res.data.message)
-        //     console.log(res.data.result.username)
-        //     setUser(res.data.result.username)
-        //     navigate('/')
-        // })
     }
 
     function navigateSignin(){

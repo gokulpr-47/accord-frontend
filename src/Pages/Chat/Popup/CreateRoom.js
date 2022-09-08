@@ -7,14 +7,16 @@ import { nanoid } from 'nanoid'
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import UserContext from "../../../Context/UserContext";
 import useAuth from '../../../hooks/useAuth'
+import { useParams } from 'react-router-dom'
 
 export default function CreateRoom(){
 
     const { roomName, setRoomName } = useContext(CreateRoomContext)
     const info = useContext(InfoContext)
-    const serverC = useContext(ServersContext)
+    const { servers, setServers, setDbContent, activeServer} = useContext(ServersContext)
     const authEmail = useContext(UserContext)
     const axiosPrivate = useAxiosPrivate();
+    let { serverId } = useParams();
 
     const { auth } = useAuth();
     
@@ -24,26 +26,45 @@ export default function CreateRoom(){
     }
 
     const handleSubmit = async (e) => {
+        console.log('entered createroom handleSubmit')
         e.preventDefault()
-        serverC.setServers(prevState => [
-            ...prevState,
-            {
-                server_name: roomName,
-                channels: [],
-                id: nanoid()
-            }
-        ])
+        // setServers(prevState => [
+        //     ...prevState,
+        //     {
+        //         server_name: roomName,
+        //         channels: [],
+        //         id: nanoid()
+        //     }
+        // ])
 
-        let id = nanoid()
+        // let id = nanoid()
         let email = auth.email
+        let channel_name = 'channel 1'
+        let chats = []
         try{
             const response = await axiosPrivate.post('/createServer',
-                JSON.stringify({ roomName, email ,id }),
+                JSON.stringify({ roomName, email }), //removed id 
                 {
                     headers: { 'Content-Type': 'application/json'},
                     withCredentials: true
                 }
             );
+            // console.log('createRoom response: ', response)
+            let id = serverId
+            const result = await axiosPrivate.post('/addChannel',
+                JSON.stringify({ channel_name, chats, id, email }),
+                {
+                    headers: {'Content-Type': 'application/json'},
+                    withCredentials: true
+                }
+            );
+            
+            const res = await axiosPrivate.get('/createServer',{
+                params: { "email": email }
+            }) 
+            console.log('server.js dbserver content: ', res.data.dbserver)
+            await setServers(res.data.dbserver)
+            await setDbContent(res.data.dbserver.length)
         } catch(err) {
             console.log(err)
         }

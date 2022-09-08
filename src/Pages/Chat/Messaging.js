@@ -11,10 +11,9 @@ export default function Messaging(){
     useEffect(() => {
         bottomRef.current?.scrollIntoView({behavior: 'smooth'});    
     }, [newChat]);
-    console.log(servers[activeServer])
 
     
-    let element = servers[activeServer]?.channels[activeChannel]?.chats.length !== 0 ? 
+    let element = servers? servers[activeServer]?.channels[activeChannel]?.chats.length !== 0 ? 
             servers[activeServer]?.channels[activeChannel]?.chats?.map(data => {
             return(
                 <div className="chats">
@@ -32,7 +31,7 @@ export default function Messaging(){
                 </div>
             )
         }):
-        ' '
+        ' ': ''
 
 
     function handleChange(e){
@@ -59,7 +58,7 @@ export default function Messaging(){
     return(
         <div className="messaging">
             <div className="messaging-header">
-                <h2>{servers[activeServer]?.channels[activeChannel]?.channel_name}</h2>
+                <h2>{servers? servers[activeServer]?.channels[activeChannel]?.channel_name : ''}</h2>
             </div>
             <div className="messaging-chatarea">
                 {element}

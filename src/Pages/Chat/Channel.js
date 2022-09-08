@@ -1,58 +1,64 @@
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useContext, useEffect } from 'react'
 import ServersContext from '../../Context/ServersContext'
+import useAuth from "../../hooks/useAuth";
+import { Link, useParams } from 'react-router-dom'
 
 export default function Channel(){
+    // const channelId = props.channelId
     const axiosPrivate = useAxiosPrivate()
+    const { auth } = useAuth();
     const {servers, activeServer, setServers, activeChannel, setActiveChannel} = useContext(ServersContext)
+    const { serverId } = useParams();
     
-    const short = servers[activeServer]?.channels
+    let short = servers? servers[activeServer]?.channels : ''
 
-    useEffect(() => {
-        const getChannel = async () => {
-            try{
-                let server_id = servers[activeServer]?.id
-                const response = await axiosPrivate.get('addChannel',{
-                    params: {
-                        server_id: server_id
-                    }
-                })
-    
-                let channelArray = response.data.channels
-                let temp_state = [...servers]
-                let temp_element = {...temp_state[activeServer]}
-                temp_element.channels = channelArray
-                temp_state[activeServer] = temp_element
-                setServers(temp_state)
-            } catch(err){
-                console.log(err)
-            }
-        }
-        getChannel()
-    },[ servers.length, activeServer])
+    // useEffect(() => {
+    //     console.log('entered')
+    //     const getChannel = async () => {
+    //         try{
+    //             let server_id = servers[activeServer]?.id
+    //             const response = await axiosPrivate.get('addChannel',{
+    //                 params: {
+    //                     server_id: server_id
+    //                 }
+    //             })
+    //             let channelArray = response.data.channels
+    //             let temp_state = [...servers]
+    //             let temp_element = {...temp_state[activeServer]}
+    //             temp_element.channels = channelArray
+    //             temp_state[activeServer] = temp_element
+    //             setServers(temp_state)
+    //         } catch(err){
+    //             console.log(err)
+    //         }
+    //     }
+    //     getChannel()
+    // },[ servers?.length, activeServer])
 
     const addChannel = async () => {
-        let channelArray = []
-        servers[activeServer].channels.map(prevData => channelArray.push(prevData))
+        // let channelArray = []
+        // servers[activeServer].channels.map(prevData => channelArray.push(prevData))
         let pushContent = {
             channel_name:'channel '+(short.length+1),
             chats:[]
         }
         let channel_name = pushContent.channel_name;
         let chats = pushContent.chats;
-        let id = servers[activeServer].id;
-        channelArray.push(pushContent)
+        let id = serverId
 
-        let temp_state = [...servers]
-        let temp_element = { ...temp_state[activeServer]}
-        temp_element.channels = channelArray
-        temp_state[activeServer] = temp_element
-        setServers(temp_state)
-        console.log(channelArray)
+        // channelArray.push(pushContent)
+        // let temp_state = [...servers]
+        // let temp_element = { ...temp_state[activeServer]}
+        // temp_element.channels = channelArray
+        // temp_state[activeServer] = temp_element
+        // setServers(temp_state)
+        // console.log(channelArray)
 
-        let email = localStorage.getItem('email')
+        let email = auth.email
         
         try{
+            console.log('channels.js: ', id)
             const response = await axiosPrivate.post('/addChannel',
                 JSON.stringify({ channel_name, chats, id, email }),
                 {
@@ -61,6 +67,11 @@ export default function Channel(){
                 }
             );
             console.log(JSON.stringify(response?.data))
+            const res = await axiosPrivate.get('/createServer',{
+                params: { "email": email }
+            }) 
+            console.log('server.js dbserver content: ', res.data.dbserver)
+            await setServers(res.data.dbserver)
         } catch (err){
             console.log(err)
         }
@@ -73,29 +84,33 @@ export default function Channel(){
         ))
         setActiveChannel(channels.indexOf(e.target.innerText))
     }
-    console.log(short)
-    let element = short?.length !== 0? 
-        short.map(data=>{
+    
+    let element = short?.length !== 0?
+        short?.map((data, i)=>{
             return(
-                <div className='channelList' >
-                    <p onClick={(e)=>channelIndex(e)}>{data.channel_name}</p>
-                </div>
+                <Link to={`/channels/${servers[activeServer]._id}/${data._id}`}>
+                    <div className='channelList' key={i}>
+                        <p onClick={(e)=>channelIndex(e)}>{data.channel_name}</p>
+                    </div>
+                </Link>
             )
         }):
-        ' '
+        ''
     
     return(
         <div className="channel">
             <h1>ACCORD</h1>
-            <h2>{servers[activeServer]?.server_name}</h2>
+            <h2>{servers? servers[activeServer]?.server_name : ''}</h2>
+            <div className='channels-header'>
             {
-                servers.length === 0?
-                <p>add new server</p>:
-                <div className='channels-header'>
-                    <p>Channels </p>
-                    <p className='addChannel' onClick={()=>addChannel()}>+</p>
-                </div>
-            }
+                servers?.length === 0?
+                    <p>add new server</p> :
+                    <>
+                        <p>Channels </p>    
+                        <p className='addChannel' onClick={()=>addChannel()}>+</p>
+                    </>
+                }
+            </div>
             {element}
         </div>
     )
