@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useContext, useEffect } from 'react'
 import ServersContext from '../../Context/ServersContext'
@@ -10,8 +11,10 @@ export default function Channel(){
     const { auth } = useAuth();
     const {servers, activeServer, setServers, activeChannel, setActiveChannel} = useContext(ServersContext)
     const { serverId } = useParams();
-    
+
     let short = servers? servers[activeServer]?.channels : ''
+    
+    const [ selected, setSelected ] = useState(short? short[0]._id : '');
 
     // useEffect(() => {
     //     console.log('entered')
@@ -89,7 +92,7 @@ export default function Channel(){
         short?.map((data, i)=>{
             return(
                 <Link to={`/channels/${servers[activeServer]._id}/${data._id}`}>
-                    <div className='channelList' key={i}>
+                    <div className={`${data._id === selected? 'channelList active': 'channelList'}`} onClick={(e)=>setSelected(data._id)} key={i}>
                         <p onClick={(e)=>channelIndex(e)}>{data.channel_name}</p>
                     </div>
                 </Link>

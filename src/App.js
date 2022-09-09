@@ -25,7 +25,7 @@ export default function App(){
             <AuthProvider>
                 <UserContext.Provider value={{ user, setUser, authEmail, setAuthEmail, isLoggedIn, setIsLoggedIn }}>
                     <Routes>
-                        <Route path='*' element={<Navigate to="/channels" replace/>} />
+                        {/* <Route path='*' element={<Navigate to="/channels" replace/>} /> */}
                         <Route path='/Signin' element={<Signin/>} />
                         <Route path='/signup' element={<Signup/>} />
 

@@ -49,6 +49,10 @@ a{
 	user-select: none;
 }
 
+.server-container.active{
+	border-left: 3px solid var(--blue)
+}
+
 .home-container{
 	background: black
 }
@@ -62,6 +66,12 @@ a{
 }
 
 /* Channel.js  */
+.desktop{
+	display: flex;
+}
+.desktop > .channel{
+	width: 20% !important;
+}
 .channel{
 	width: 20%;
     display:flex;
@@ -90,6 +100,10 @@ a{
 
 .channelList:hover{
 	cursor: pointer;
+}
+
+.channelList.active{
+	border-bottom: 1px solid var(--blue)
 }
 
 .addChannel:hover{

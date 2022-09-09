@@ -27,8 +27,8 @@ export default function Chat() {
     const { user, setUser, isLoggedIn, setIsLoggedIn } = useContext(UserContext)
     const [ info, setInfo ] = useState(false);
     const [ servers, setServers] = useState();
-    const [ activeServer, setActiveServer ] = useState(0)
-    const [ activeChannel, setActiveChannel ] = useState(0)
+    const [ activeServer, setActiveServer ] = useState()
+    const [ activeChannel, setActiveChannel ] = useState()
     const [ dbContent, setDbContent] = useState(0)
     const [ home, setHome ] = useState();
 
@@ -96,10 +96,10 @@ export default function Chat() {
                             <InfoContext.Provider value={{info,setInfo,pop}}>
                                 <Server/>
                                 { servers || !dbContent ? 
-                                    <>
+                                    <div className="desktop">
                                         <Channel/>
                                         <Messaging />
-                                    </>
+                                    </div>
                                     :
                                     <p>loading</p>
                                 }
