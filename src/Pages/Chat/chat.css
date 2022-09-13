@@ -1,5 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&family=Karla:wght@400;500&family=Roboto:wght@100;300;400;500;700&display=swap');
 *{
 	text-decoration: none;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+
+:root{
+    --blue: #00D5F2;
+    --black: #1D1D1D;
+}
+
+
+body{
+    background: linear-gradient(to bottom right, rgb(29,29,29,1), rgb(29,29,29,0.95));
+    height: 100vh;
+    color:white;
+    font-family: 'Roboto';
+}
+
+#root{
+    height:100%;
+    width: 100%;
+    /* padding: 20px; */
 }
 
 a{

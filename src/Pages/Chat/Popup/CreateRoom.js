@@ -8,12 +8,14 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import UserContext from "../../../Context/UserContext";
 import useAuth from '../../../hooks/useAuth'
 import { useParams } from 'react-router-dom'
+import useChat from "../../../hooks/useChat";
 
 export default function CreateRoom(){
 
     const { roomName, setRoomName } = useContext(CreateRoomContext)
     const info = useContext(InfoContext)
-    const { servers, setServers, setDbContent, activeServer} = useContext(ServersContext)
+    // const { servers, setServers, setDbContent, activeServer} = useContext(ServersContext)
+    const { servers, setServers, setDbContent, activeServer, setInfo } = useChat();
     const authEmail = useContext(UserContext)
     const axiosPrivate = useAxiosPrivate();
     let { serverId } = useParams();
@@ -49,8 +51,10 @@ export default function CreateRoom(){
                     withCredentials: true
                 }
             );
-            // console.log('createRoom response: ', response)
-            let id = serverId
+            console.log('creating channel')
+            console.log('createRoom response: ', response)
+            let id = response.data.result._id
+            console.log(id)
             const result = await axiosPrivate.post('/addChannel',
                 JSON.stringify({ channel_name, chats, id, email }),
                 {
@@ -58,7 +62,7 @@ export default function CreateRoom(){
                     withCredentials: true
                 }
             );
-            
+            console.log('calling servers')
             const res = await axiosPrivate.get('/createServer',{
                 params: { "email": email }
             }) 
@@ -68,7 +72,7 @@ export default function CreateRoom(){
         } catch(err) {
             console.log(err)
         }
-        info.pop()
+        setInfo(prevState => !prevState)
     }
 
     return(

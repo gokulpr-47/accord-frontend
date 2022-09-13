@@ -5,14 +5,17 @@ import InfoContext from '../../../Context/InfoContext';
 import CreateRoom from './CreateRoom'
 import JoinRoom from './JoinRoom'
 import './popup.css'
+import useChat from '../../../hooks/useChat';
 
 export default function Popup(){
+
+    const { setInfo } = useChat();
 
     const [activeTab, setActiveTab] = useState("tab1");
     const [ roomName, setRoomName ] = useState('');
     const [ joinCode, setjoinCode ] = useState();
 
-    const pop = useContext(InfoContext)
+    // const pop = useContext(InfoContext)
 
     const handleTab1 = () => {
         // update the state to tab1
@@ -22,9 +25,12 @@ export default function Popup(){
         // update the state to tab2
         setActiveTab("tab2");
     };
+    function pop(){
+        setInfo(prevState => !prevState)
+    }
 
     return(
-        <div className="popup" onClick={(e)=> e.currentTarget === e.target && pop.pop()}>
+        <div className="popup" onClick={(e)=> e.currentTarget === e.target && pop()}>
             <div className="popup-container">  
                 <div className="Tabs">
                     {/* Tab nav */}

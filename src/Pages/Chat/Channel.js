@@ -4,13 +4,15 @@ import { useContext, useEffect } from 'react'
 import ServersContext from '../../Context/ServersContext'
 import useAuth from "../../hooks/useAuth";
 import { Link, useParams } from 'react-router-dom'
+import useChat from '../../hooks/useChat';
 
 export default function Channel(){
     // const channelId = props.channelId
     const axiosPrivate = useAxiosPrivate()
     const { auth } = useAuth();
-    const {servers, activeServer, setServers, activeChannel, setActiveChannel} = useContext(ServersContext)
-    const { serverId } = useParams();
+    const { servers, activeServer, setServers, activeChannel, setActiveChannel } = useChat();
+    // const {servers, activeServer, setServers, activeChannel, setActiveChannel} = useContext(ServersContext)
+    const { serverId, channelId } = useParams();
 
     let short = servers? servers[activeServer]?.channels : ''
     
@@ -38,6 +40,10 @@ export default function Channel(){
     //     }
     //     getChannel()
     // },[ servers?.length, activeServer])
+
+    // useEffect(()=>{
+    //     setActiveChannel(0)
+    // },[serverId])
 
     const addChannel = async () => {
         // let channelArray = []
@@ -91,8 +97,8 @@ export default function Channel(){
     let element = short?.length !== 0?
         short?.map((data, i)=>{
             return(
-                <Link to={`/channels/${servers[activeServer]._id}/${data._id}`}>
-                    <div className={`${data._id === selected? 'channelList active': 'channelList'}`} onClick={(e)=>setSelected(data._id)} key={i}>
+                <Link to={`/channels/${servers[activeServer]._id}/${data._id}`} key={i}>
+                    <div className={`${data._id === selected? 'channelList active': 'channelList'}`} onClick={(e)=>setSelected(data._id)}>
                         <p onClick={(e)=>channelIndex(e)}>{data.channel_name}</p>
                     </div>
                 </Link>

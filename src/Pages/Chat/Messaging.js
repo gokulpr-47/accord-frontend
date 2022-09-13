@@ -2,9 +2,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import { useContext, useState, useRef, useEffect } from 'react'
 import ServersContext from '../../Context/ServersContext'
+import useChat from '../../hooks/useChat'
+import UserContext from '../../Context/UserContext'
 
 export default function Messaging(){
-    const { servers, setServers, activeServer, activeChannel, setActiveChannel, user } = useContext(ServersContext)
+    // const { servers, setServers, activeServer, activeChannel, setActiveChannel, user } = useContext(ServersContext)
+    const { user } = useContext(UserContext)
+    const { servers, setServers, activeServer, activeChannel, setActiveChannel } = useChat();
     const [ newChat, setNewChats ] = useState()
     const bottomRef = useRef(null);
 

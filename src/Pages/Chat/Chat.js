@@ -6,55 +6,21 @@ import Server from './Server'
 import Channel from './Channel'
 import Messaging from './Messaging'
 import Split from 'react-split'
-import InfoContext from '../../Context/InfoContext'
 import Popup from './Popup/Popup';
-import ServersContext from '../../Context/ServersContext'
-import {nanoid} from 'nanoid'
 import UserContext from '../../Context/UserContext';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import Signin from '../Signin/Signin';
-import useAuth from '../../hooks/useAuth'
-import { useParams } from 'react-router-dom';
+import useChat from '../../hooks/useChat';
 
 export default function Chat() {
     const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 992px)' })
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 992px)' })
 
-    const { serverId, channelId } = useParams()
-    
-    const { auth, persist } = useAuth()
-
-    const { user, setUser, isLoggedIn, setIsLoggedIn } = useContext(UserContext)
-    const [ info, setInfo ] = useState(false);
-    const [ servers, setServers] = useState();
-    const [ activeServer, setActiveServer ] = useState()
-    const [ activeChannel, setActiveChannel ] = useState()
-    const [ dbContent, setDbContent] = useState(0)
-    const [ home, setHome ] = useState();
-
-    function pop(){
-        setInfo((prevState)=> !prevState);
-    }
+    const { servers, dbContent, info, setInfo } = useChat();
 
     return (
         <>
             { isTabletOrMobile &&
                 <div id="App">
-                    <ServersContext.Provider value = {{ 
-                        servers, 
-                        setServers, 
-                        activeServer, 
-                        setActiveServer, 
-                        activeChannel, 
-                        setActiveChannel,
-                        user,
-                        setUser,
-                        dbContent,
-                        setDbContent
-                    }}>
-                        <InfoContext.Provider value={{ info, setInfo, pop}}>
-                            <SideBar/>
-                        </InfoContext.Provider>
+                        <SideBar/>
                         <>
                             <div id="page-wrap">
                                 {
@@ -64,7 +30,6 @@ export default function Chat() {
                                 }
                             </div>
                         </>
-                    </ServersContext.Provider>
                 </div>
             }
             { isDesktopOrLaptop && 
@@ -80,41 +45,19 @@ export default function Chat() {
                         direction="horizontal"
                         cursor="col-resize"
                     >                        
-                        <ServersContext.Provider value = {{ servers, 
-                            setServers, 
-                            activeServer, 
-                            setActiveServer, 
-                            activeChannel, 
-                            setActiveChannel,
-                            user,
-                            setUser,
-                            dbContent,
-                            setDbContent,
-                            home,
-                            setHome
-                        }}>
-                            <InfoContext.Provider value={{info,setInfo,pop}}>
-                                <Server/>
-                                { servers || !dbContent ? 
-                                    <div className="desktop">
-                                        <Channel/>
-                                        <Messaging />
-                                    </div>
-                                    :
-                                    <p>loading</p>
-                                }
-                            </InfoContext.Provider>
-                        </ServersContext.Provider>
+                        <Server/>
+                        { servers || !dbContent ? 
+                            <div className="desktop">
+                                <Channel/>
+                                <Messaging />
+                            </div>
+                            :
+                            <p>loading</p>
+                        }
                     </Split>
                 </div>
             }
-            { info && 
-                <ServersContext.Provider value = {{ servers, setServers, dbContent, setDbContent}}>
-                    <InfoContext.Provider value={{ info, setInfo, pop }}>
-                        <Popup />
-                    </InfoContext.Provider> 
-                </ServersContext.Provider>
-            }          
+            { info && <Popup /> }          
         </>
     );
 } 

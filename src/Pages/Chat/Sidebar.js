@@ -6,10 +6,11 @@ import Split from 'react-split'
 import Server from './Server'
 import Channel from './Channel'
 import ServersContext from '../../Context/ServersContext'
+import useChat from '../../hooks/useChat'
 
 export default props => {
-    
-    const {servers} = useContext(ServersContext)    
+    const { servers } = useChat();
+    // const {servers} = useContext(ServersContext)    
     return (
         <Menu 
             isOpen={true} 

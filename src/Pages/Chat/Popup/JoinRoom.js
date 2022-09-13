@@ -5,12 +5,14 @@ import axios from 'axios'
 import UserContext from '../../../Context/UserContext';
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import useAuth from '../../../hooks/useAuth';
+import useChat from '../../../hooks/useChat';
 
 export default function JoinRoom(){
     const [ code, setCode ] = useState()
-    const info = useContext(InfoContext)
+    // const info = useContext(InfoContext)
     const { authEmail } = useContext(UserContext)
-    const {servers, setServers, setDbContent} = useContext(ServersContext)
+    // const {servers, setServers, setDbContent} = useContext(ServersContext)
+    const { servers, setServers, setDbContent, setInfo } = useChat();
     const axiosPrivate = useAxiosPrivate()
     const { auth } = useAuth();
 
@@ -35,7 +37,7 @@ export default function JoinRoom(){
         console.log('server.js dbserver content: ', res.data.dbserver)
         await setServers(res.data.dbserver)
         await setDbContent(res.data.dbserver.length)
-        info.pop()
+        setInfo(prevState => !prevState)
     }
 
     return(

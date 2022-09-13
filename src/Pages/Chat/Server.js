@@ -1,21 +1,17 @@
-import { useContext, useEffect, useState } from 'react'
-import InfoContext from '../../Context/InfoContext'
-import ServersContext from '../../Context/ServersContext'
+import { useEffect, useState } from 'react'
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import UserContext from '../../Context/UserContext'
 import useAuth from '../../hooks/useAuth'
 import { useNavigate, useLocation, Link, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import useLogout from '../../hooks/useLogout'
+import useChat from '../../hooks/useChat';
 
 export default function Server(){
-    
+    const { info, setInfo , servers, setServers, activeServer, setActiveServer, activeChannel, setActiveChannel, dbContent, setDbContent, home, setHome } = useChat();
     const logout = useLogout();
     const { serverId, channelId } = useParams()
-    const info = useContext(InfoContext)
     const { auth } = useAuth()
-    const {servers, setServers, activeServer, setActiveServer, setActiveChannel, dbContent, setDbContent, home, setHome} = useContext(ServersContext)    
     const axiosPrivate = useAxiosPrivate();
     
     const navigate = useNavigate();
@@ -25,6 +21,8 @@ export default function Server(){
     const [selected, setSelected] = useState();
     const email = auth.email
 
+    const [ clicked, setClicked ] = useState(0);
+
     useEffect(()=>{
         const getServer = async () => {
             
@@ -32,78 +30,63 @@ export default function Server(){
                 const response = await axiosPrivate.get('/createServer',{
                     params: { "email": email }
                 }) 
-                await setServers(response.data.dbserver)
-                await setDbContent(response.data.dbserver.length)
-                setActiveServer(0)
-                setActiveChannel(0)
-                if(response.data.dbserver.length === 0){
-                    const response = await axiosPrivate.post('/home',
-                        JSON.stringify({ email }),
-                        {
-                            headers: { 'Content-Type': 'application/json'},
-                            withCredentials: true
-                        }
-                    );
-                    setHome(true)
-                }
+                setServers(response.data.dbserver)
+                setDbContent(response.data.dbserver.length)
             } catch(err){
                 console.log(err)
-                navigate(from, { replace: true});    
+                navigate(from, { replace: true});
             }
         }
         getServer();
     },[]) 
-    
-    const findActiveServer = async (e, server_id, initParam, server) => {
-        const names = [];
-        servers.map((server) => (
-            names.push(server.server_name.match(/\b(\w)/g).join(''))
-        ))
 
+    useEffect( async () => {
         try{
-            const res = await axiosPrivate.get(`/createServer/${server_id}/${initParam}`,{
+            const res = await axiosPrivate.get(`/createServer/${serverId}/${channelId}`,{
                 params: {
                     "email": email
                 }
             })
             await setServers(res.data.dbserver)
             await setDbContent(res.data.dbserver.length)
-            let currentServer = servers.map(server => {
-                console.log('server._id: ', server._id, 'serverId: ', server_id)
-                if(server._id === server_id ) return servers.indexOf(server)
-                return 0
-            })
-            console.log('currentServer: ', currentServer.reduce((prev, curr) => prev + curr))
-            // console.log('currentServer: ', currentServer)
-            await setActiveServer(currentServer.reduce((prev, curr) => prev + curr))
-            console.log('active server: ',activeServer)
-            setActiveChannel(servers[activeServer]?.channels.map(channel => {
-                if(channel._id === channelId ) return servers[activeServer].channels.indexOf(channel)
-            }))
+            if(!activeServer){
+                const currentServer = res.data.dbserver.findIndex(server => {
+                    return server._id === serverId
+                })
+                setActiveServer(currentServer)
+                const currentChannel = res.data.dbserver[currentServer]?.channels?.findIndex(channel => {
+                    return channel._id === channelId
+                })
+                setSelected(serverId)
+                setActiveChannel(currentChannel)
+
+            }
         } catch(err) {
             console.log(err)
         }
-
-        // let index = names.indexOf(e.target.innerText)
-        // setActiveServer(servers[index].id)
-        // setActiveServer(names.indexOf(e.target.innerText))
-        // setActiveChannel(0)
+    },[activeServer, clicked])
+    
+    const findActiveServer = async (e, server_id, server, i) => {
+        const names = [];
         setSelected(server._id)
+        servers.map((server) => (
+            names.push(server.server_name.match(/\b(\w)/g).join(''))
+        ))
+
+        setActiveServer(i)
+        setClicked(prev => prev+1)
     }
 
-    let initParam = servers? `${servers[activeServer]?.channels ? servers[activeServer].channels[0]?._id : ''}` : ' '
-    // console.log('channel id : ', servers?  servers[activeServer].channels[0]: '')
-
     const element = servers?.map((server, i) =>(
-        <Link to={`/channels/${server._id}/${initParam}`}>
-            <div className={`${server._id === selected? "server-container active": "server-container"}`} onClick={(e)=>findActiveServer(e, server._id, initParam, server)} key={i}>
+        <Link to={`/channels/${server._id}/${server.channels[0]._id}`} key={i}>
+            <div className={`${server._id === selected? "server-container active": "server-container"}`} onClick={(e)=>findActiveServer(e, server._id, server, i)}>
                 <p>{server?.server_name?.match(/\b(\w)/g).join('')}</p>
             </div>  
         </Link>
     ))
-
+    
     function pop(){
-        info.pop();
+        setInfo(prevState => !prevState)
     }
     
     const signout = async () => {
@@ -113,11 +96,11 @@ export default function Server(){
     
     return(
         <div className="server">
-            <Link to={'/channels/me'}>
+            {/* <Link to={'/channels'}>
                 <div className="home-container">
                     <p>^</p>
                 </div>
-            </Link>
+            </Link> */}
             {element}
             <div className="new-join" onClick={()=>pop()}>
                 <h1>+</h1>
