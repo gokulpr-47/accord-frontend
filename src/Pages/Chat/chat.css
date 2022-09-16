@@ -104,15 +104,54 @@ a{
 	padding: 60px 10px 0;
 }
 
+.server-name{
+	width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+	margin-bottom: 20px;
+}
+
 .channel > h1{
 	color: var(--blue);
 	font-size: 40px;
 	margin-bottom: 15px;
 }
 
-.channel > h2{
+.server-name > h2{
 	border-bottom: 1px solid var(--blue);
-	margin-bottom: 20px;
+}
+
+.serverNameIcons{
+	width: 40px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	position: relative	
+}
+
+.copyIcon{
+	color: var(--blue);
+}
+
+.serverNameIcons > p{
+	display: flex;
+    z-index: 10;
+    position: absolute;
+    bottom: 28px;
+	right: 6px;
+	width: max-content;
+}
+
+.copyIcon:hover{
+	color: inherit;
+	cursor: pointer;
+	transition: linear 0.5s;
+}
+
+.deleteIcon:hover{
+	color: red;
+	cursor: pointer;
+	transition: linear 0.5s;
 }
 
 .channels-header{
@@ -192,6 +231,16 @@ a{
 .chats{
 	display: flex;
 	margin-bottom: 14px;
+}
+
+.user-name{
+	display: flex;
+	align-items: center;
+}
+
+.user-name > p {
+	margin-left: 10px;
+	font-size: 9px;
 }
 
 .user-chat-container{

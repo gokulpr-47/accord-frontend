@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import SideBar from './Sidebar';
 import './chat.css';
 import { useMediaQuery } from 'react-responsive'
@@ -7,14 +7,26 @@ import Channel from './Channel'
 import Messaging from './Messaging'
 import Split from 'react-split'
 import Popup from './Popup/Popup';
-import UserContext from '../../Context/UserContext';
 import useChat from '../../hooks/useChat';
+import { useParams } from 'react-router-dom'
 
 export default function Chat() {
     const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 992px)' })
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 992px)' })
 
-    const { servers, dbContent, info, setInfo } = useChat();
+    const { servers, activeServer, activeChannel, setActiveServer, setActiveChannel, dbContent, info } = useChat();
+    const { serverId, channelId } = useParams()
+
+    useEffect(()=>{
+        const serverIndex = servers?.findIndex(server => {
+            return server._id === serverId
+        })
+        setActiveServer(serverIndex)
+        const channelIndex = servers? servers[serverIndex]?.channels?.findIndex(channel => {
+            return channel._id === channelId    
+        }): ''
+        setActiveChannel(channelIndex)
+    },[ serverId, channelId ])
 
     return (
         <>

@@ -48,8 +48,9 @@ export default function Signin(){
             setUser(response.data.user.username) //don't need 
             const accessToken = response?.data?.accessToken;
             const user = response.data.user.username;
+            const userId = response.data.user._id
             console.log(response)
-            await setAuth({ email, user, accessToken }) 
+            await setAuth({ email, user, accessToken, userId }) 
             await setPersist(true);
             localStorage.setItem('persist', persist);
             navigate(from, { replace: true});

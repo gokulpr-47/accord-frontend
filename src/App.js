@@ -32,7 +32,7 @@ export default function App(){
                             <Route path='/signup' element={<Signup/>} />
 
                             <Route element={<PersistLogin/>}>   
-                                <Route path='channels' element={<Home/>} />
+                                <Route path='channels' element={<Chat/>} />
                                 <Route path='channels/:serverId/:channelId' element={<Chat/>} />
                             </Route>
                             <Route path="tests/:testId" element={<Test/>} />

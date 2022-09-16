@@ -5,49 +5,50 @@ import ServersContext from '../../Context/ServersContext'
 import useAuth from "../../hooks/useAuth";
 import { Link, useParams } from 'react-router-dom'
 import useChat from '../../hooks/useChat';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCopy } from '@fortawesome/free-regular-svg-icons'
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 export default function Channel(){
-    // const channelId = props.channelId
     const axiosPrivate = useAxiosPrivate()
     const { auth } = useAuth();
-    const { servers, activeServer, setServers, activeChannel, setActiveChannel } = useChat();
-    // const {servers, activeServer, setServers, activeChannel, setActiveChannel} = useContext(ServersContext)
+    const { servers, activeServer, setActiveServer, setServers, activeChannel, setActiveChannel } = useChat();
     const { serverId, channelId } = useParams();
 
     let short = servers? servers[activeServer]?.channels : ''
     
-    const [ selected, setSelected ] = useState(short? short[0]._id : '');
+    const [ selected, setSelected ] = useState(channelId);
+    const [ copied, setCopied ] = useState(false)
 
-    // useEffect(() => {
-    //     console.log('entered')
-    //     const getChannel = async () => {
-    //         try{
-    //             let server_id = servers[activeServer]?.id
-    //             const response = await axiosPrivate.get('addChannel',{
-    //                 params: {
-    //                     server_id: server_id
-    //                 }
-    //             })
-    //             let channelArray = response.data.channels
-    //             let temp_state = [...servers]
-    //             let temp_element = {...temp_state[activeServer]}
-    //             temp_element.channels = channelArray
-    //             temp_state[activeServer] = temp_element
-    //             setServers(temp_state)
-    //         } catch(err){
-    //             console.log(err)
-    //         }
-    //     }
-    //     getChannel()
-    // },[ servers?.length, activeServer])
 
-    // useEffect(()=>{
-    //     setActiveChannel(0)
-    // },[serverId])
+    let email = auth.email
+
+    useEffect(()=>{
+        setSelected(channelId)
+    },[activeServer])
+
+    // useEffect(()=> {
+    //     console.log('selected: ',selected)
+    //     const ch = servers? servers[activeServer]?.channels?.findIndex((channel)=> {
+    //         return channel._id === selected
+    //     }) : ''
+    //     setActiveChannel(ch)
+    // },[channelId])
+
+    const getServer = async () => {
+        try{
+            console.log('entered delte')
+            const res = await axiosPrivate.get('/createServer',{
+                params: { "email": email }
+            }) 
+            setServers(res.data.dbserver)
+        } catch(err) {
+            console.log(err)
+        }
+    }
 
     const addChannel = async () => {
-        // let channelArray = []
-        // servers[activeServer].channels.map(prevData => channelArray.push(prevData))
         let pushContent = {
             channel_name:'channel '+(short.length+1),
             chats:[]
@@ -55,17 +56,6 @@ export default function Channel(){
         let channel_name = pushContent.channel_name;
         let chats = pushContent.chats;
         let id = serverId
-
-        // channelArray.push(pushContent)
-        // let temp_state = [...servers]
-        // let temp_element = { ...temp_state[activeServer]}
-        // temp_element.channels = channelArray
-        // temp_state[activeServer] = temp_element
-        // setServers(temp_state)
-        // console.log(channelArray)
-
-        let email = auth.email
-        
         try{
             console.log('channels.js: ', id)
             const response = await axiosPrivate.post('/addChannel',
@@ -75,12 +65,7 @@ export default function Channel(){
                     withCredentials: true
                 }
             );
-            console.log(JSON.stringify(response?.data))
-            const res = await axiosPrivate.get('/createServer',{
-                params: { "email": email }
-            }) 
-            console.log('server.js dbserver content: ', res.data.dbserver)
-            await setServers(res.data.dbserver)
+            await getServer();
         } catch (err){
             console.log(err)
         }
@@ -92,6 +77,17 @@ export default function Channel(){
             channels.push(channel.channel_name)
         ))
         setActiveChannel(channels.indexOf(e.target.innerText))
+    }
+
+    const deleteserver = async (serverId) => {
+        try{
+            const response = await axiosPrivate.delete('/createServer',{
+                params: { "server_id": serverId}
+            })
+            await getServer();
+        } catch(err) {
+            console.log(err)
+        }
     }
     
     let element = short?.length !== 0?
@@ -105,11 +101,23 @@ export default function Channel(){
             )
         }):
         ''
-    
+
     return(
         <div className="channel">
             <h1>ACCORD</h1>
-            <h2>{servers? servers[activeServer]?.server_name : ''}</h2>
+            <div className="server-name">
+                <h2>{servers? servers[activeServer]?.server_name : ''}</h2>
+                <div className="serverNameIcons">
+                <CopyToClipboard text={serverId}
+                    onCopy={() => {setCopied(true); setTimeout(() => {setCopied(false)}, 2000)}}>
+                    <FontAwesomeIcon icon={faCopy} className="copyIcon"  />
+                </CopyToClipboard>
+                    {copied? <p>copied !</p>: ''}
+                    <>
+                        <FontAwesomeIcon icon={faTrash} className="deleteIcon" onClick={()=>deleteserver(serverId)}/>
+                    </>
+                </div>
+            </div>  
             <div className='channels-header'>
             {
                 servers?.length === 0?

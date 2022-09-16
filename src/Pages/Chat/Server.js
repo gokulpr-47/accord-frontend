@@ -40,30 +40,33 @@ export default function Server(){
         getServer();
     },[]) 
 
-    useEffect( async () => {
-        try{
-            const res = await axiosPrivate.get(`/createServer/${serverId}/${channelId}`,{
-                params: {
-                    "email": email
+    useEffect(() => {
+        const getServer = async () => {
+            try{
+                const res = await axiosPrivate.get(`/createServer/${serverId}/${channelId}`,{
+                    params: {
+                        "email": email
+                    }
+                })
+                await setServers(res.data.dbserver)
+                await setDbContent(res.data.dbserver.length)
+                if(!activeServer){
+                    const currentServer = res.data.dbserver.findIndex(server => {
+                        return server._id === serverId
+                    })
+                    // setActiveServer(currentServer)
+                    // const currentChannel = res.data.dbserver[currentServer]?.channels?.findIndex(channel => {
+                    //     return channel._id === channelId
+                    // })
+                    setSelected(serverId)
+                    // setActiveChannel(currentChannel)
+                    
                 }
-            })
-            await setServers(res.data.dbserver)
-            await setDbContent(res.data.dbserver.length)
-            if(!activeServer){
-                const currentServer = res.data.dbserver.findIndex(server => {
-                    return server._id === serverId
-                })
-                setActiveServer(currentServer)
-                const currentChannel = res.data.dbserver[currentServer]?.channels?.findIndex(channel => {
-                    return channel._id === channelId
-                })
-                setSelected(serverId)
-                setActiveChannel(currentChannel)
-
+            } catch(err) {
+                console.log(err)
             }
-        } catch(err) {
-            console.log(err)
         }
+        getServer()
     },[activeServer, clicked])
     
     const findActiveServer = async (e, server_id, server, i) => {
@@ -72,8 +75,8 @@ export default function Server(){
         servers.map((server) => (
             names.push(server.server_name.match(/\b(\w)/g).join(''))
         ))
-
-        setActiveServer(i)
+        
+        // setActiveServer(i)
         setClicked(prev => prev+1)
     }
 
@@ -86,6 +89,7 @@ export default function Server(){
     ))
     
     function pop(){
+        console.log('clicked')
         setInfo(prevState => !prevState)
     }
     
