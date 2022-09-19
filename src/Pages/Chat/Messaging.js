@@ -1,14 +1,12 @@
-import { useContext, useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import useChat from '../../hooks/useChat'
-import UserContext from '../../Context/UserContext'
 import useAuth from '../../hooks/useAuth'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { useParams } from 'react-router-dom'
 import { format } from 'timeago.js'
 
-export default function Messaging(){
-    const { user } = useContext(UserContext)
-    const { servers, setServers, activeServer, activeChannel, setActiveChannel } = useChat();
+export default function Messaging({socket}){
+    const { servers, setServers, activeServer, activeChannel } = useChat();
     const [ newChat, setNewChats ] = useState() 
     const bottomRef = useRef(null);
     const { auth } = useAuth()
@@ -16,29 +14,40 @@ export default function Messaging(){
     const { serverId, channelId } = useParams();
     const [changed, setChanged] = useState(false);
     const [ messages, setMessages ] = useState();
+    const [ room, setRoom ] = useState();
+    const {user, userId} = auth;
+
+    useEffect(()=>{
+        socket.on('connect')
+        socket.emit('join_room', channelId)
+    },[channelId])
+
+    useEffect(() => {
+        socket.on('receive_message', (data) => {
+            setMessages(prev=> [...prev, {
+                chat: data.newChat, 
+                createdAt: data.timestamp,
+                senderName: data.user
+            }]) 
+        })
+    },[socket])
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({behavior: 'smooth'});
-    }, [changed, newChat]);
-    
+    }, [changed, newChat, messages]);    
     
     function handleChange(e){
         const {value} = e.target;
         setNewChats(value)
     }
 
+    
     useEffect(()=> {
         const message = async () => {
             try{
                 const response = await axiosPrivate.get(`/message/${channelId}`)
-                const chatCollection = response?.data?.map((chat) => {
-                    return({
-                        name: chat.senderName,
-                        message: chat.chat,
-                        createdAt: chat.createdAt
-                    })
-                })
-                setMessages(response?.data)
+                // console.log(response.data)
+                setMessages(response?.data) 
                 servers && setChanged(prev=> !prev)
             } catch(err){
                 console.log(err)
@@ -49,18 +58,18 @@ export default function Messaging(){
     
     function handleSubmit(e){
         e.preventDefault()
-        let chats = []
-        servers[activeServer].channels[activeChannel].chats.map(prevData=>chats.push(prevData))
-        chats.push({
-            name: auth.user,
-            message: newChat
-        })
-        let temp_state = [...servers]
-        let temp_element = { ...temp_state[activeServer]}
-        temp_element.channels[activeChannel].chats = chats
-        temp_state[activeServer] = temp_element
-        setServers(temp_state)
         
+        setMessages(prev=> [...prev, {
+            chat: newChat,
+            createdAt: Date.now(),
+            senderName: user
+        }])
+        socket.emit("send_message", {
+            newChat, 
+            channelId,
+            timestamp: Date.now(),
+            user: user
+        })
         const addMessage = async () => {
             try{
                 const message = {
@@ -69,22 +78,22 @@ export default function Messaging(){
                     'chat': newChat
                 }
                 const response = await axiosPrivate.post('/message',
-                JSON.stringify(message),
-                {
-                    headers: { 'Content-Type': 'application/json'},
-                    withCredentials: true
-                }
+                    JSON.stringify(message),
+                    {
+                        headers: { 'Content-Type': 'application/json'},
+                        withCredentials: true
+                    }
                 )
                 console.log(response)
-                setNewChats('')
-            }catch(err){
+            } catch(err){
                 console.log(err)
             }
         }
         addMessage();
+        setNewChats('')
     }
 
-    let element = messages.map((data, i) => {
+    let element = messages?.map((data, i) => {
             return(
                 <div className="chats" key={i}>
                     <div className="user-icon">

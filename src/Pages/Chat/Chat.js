@@ -10,7 +10,7 @@ import Popup from './Popup/Popup';
 import useChat from '../../hooks/useChat';
 import { useParams } from 'react-router-dom'
 
-export default function Chat() {
+export default function Chat({socket}) {
     const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 992px)' })
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 992px)' })
 
@@ -37,7 +37,7 @@ export default function Chat() {
                             <div id="page-wrap">
                                 {
                                     servers?
-                                        <Messaging/>:
+                                        <Messaging socket={socket}/>:
                                         <p>Loading...</p>
                                 }
                             </div>
@@ -61,7 +61,7 @@ export default function Chat() {
                         { servers || !dbContent ? 
                             <div className="desktop">
                                 <Channel/>
-                                <Messaging />
+                                <Messaging socket={socket}/>
                             </div>
                             :
                             <p>loading</p>

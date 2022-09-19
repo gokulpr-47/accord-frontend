@@ -11,6 +11,8 @@ import Tests from './Pages/Tests'
 import Test from './Pages/Test'
 import Home from './Pages/Home'
 import { ChatProvider } from './Context/ChatContext'
+import io from 'socket.io-client'
+const socket = io.connect("http://localhost:3001")
 
 export default function App(){
 
@@ -32,8 +34,8 @@ export default function App(){
                             <Route path='/signup' element={<Signup/>} />
 
                             <Route element={<PersistLogin/>}>   
-                                <Route path='channels' element={<Chat/>} />
-                                <Route path='channels/:serverId/:channelId' element={<Chat/>} />
+                                <Route path='channels' element={<Chat socket={socket}/>} />
+                                <Route path='channels/:serverId/:channelId' element={<Chat socket={socket}/>} />
                             </Route>
                             <Route path="tests/:testId" element={<Test/>} />
                         </Routes>

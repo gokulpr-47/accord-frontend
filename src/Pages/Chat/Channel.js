@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { useContext, useEffect } from 'react'
-import ServersContext from '../../Context/ServersContext'
+import { useEffect } from 'react'
 import useAuth from "../../hooks/useAuth";
 import { Link, useParams } from 'react-router-dom'
 import useChat from '../../hooks/useChat';
@@ -13,7 +12,7 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 export default function Channel(){
     const axiosPrivate = useAxiosPrivate()
     const { auth } = useAuth();
-    const { servers, activeServer, setActiveServer, setServers, activeChannel, setActiveChannel } = useChat();
+    const { servers, activeServer, setServers, setActiveChannel } = useChat();
     const { serverId, channelId } = useParams();
 
     let short = servers? servers[activeServer]?.channels : ''
@@ -58,7 +57,7 @@ export default function Channel(){
         let id = serverId
         try{
             console.log('channels.js: ', id)
-            const response = await axiosPrivate.post('/addChannel',
+            await axiosPrivate.post('/addChannel',
                 JSON.stringify({ channel_name, chats, id, email }),
                 {
                     headers: {'Content-Type': 'application/json'},
@@ -81,7 +80,7 @@ export default function Channel(){
 
     const deleteserver = async (serverId) => {
         try{
-            const response = await axiosPrivate.delete('/createServer',{
+            await axiosPrivate.delete('/createServer',{
                 params: { "server_id": serverId}
             })
             await getServer();
