@@ -26,6 +26,7 @@ export default function Chat({socket}) {
             return channel._id === channelId    
         }): ''
         setActiveChannel(channelIndex)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[ serverId, channelId ])
 
     return (

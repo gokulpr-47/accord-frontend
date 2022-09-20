@@ -1,24 +1,22 @@
 import CreateRoomContext from "../../../Context/CreateRoomContext";
-import InfoContext from "../../../Context/InfoContext";
+// import InfoContext from "../../../Context/InfoContext";
 import { useContext } from "react";
 import './popup.css'
-import ServersContext from "../../../Context/ServersContext";
-import { nanoid } from 'nanoid'
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import UserContext from "../../../Context/UserContext";
+// import UserContext from "../../../Context/UserContext";
 import useAuth from '../../../hooks/useAuth'
-import { useParams } from 'react-router-dom'
+// import { useParams } from 'react-router-dom'
 import useChat from "../../../hooks/useChat";
 
 export default function CreateRoom(){
 
     const { roomName, setRoomName } = useContext(CreateRoomContext)
-    const info = useContext(InfoContext)
+    // const info = useContext(InfoContext)
     // const { servers, setServers, setDbContent, activeServer} = useContext(ServersContext)
-    const { servers, setServers, setDbContent, activeServer, setInfo } = useChat();
-    const authEmail = useContext(UserContext)
+    const { setServers, setDbContent, setInfo } = useChat();
+    // const authEmail = useContext(UserContext)
     const axiosPrivate = useAxiosPrivate();
-    let { serverId } = useParams();
+    // let { serverId } = useParams();
 
     const { auth } = useAuth();
     
@@ -55,7 +53,7 @@ export default function CreateRoom(){
             console.log('createRoom response: ', response)
             let id = response.data.result._id
             console.log(id)
-            const result = await axiosPrivate.post('/addChannel',
+            await axiosPrivate.post('/addChannel',
                 JSON.stringify({ channel_name, chats, id, email }),
                 {
                     headers: {'Content-Type': 'application/json'},

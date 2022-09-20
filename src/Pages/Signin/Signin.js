@@ -7,7 +7,7 @@ import useAuth from '../../hooks/useAuth'
 
 export default function Signin(){
 
-    const { auth, setAuth, persist, setPersist } = useAuth();
+    const { setAuth, persist, setPersist } = useAuth();
 
     const { setUser } = useContext(UserContext)
 
@@ -99,7 +99,7 @@ export default function Signin(){
                         />
                         <button> SIGN IN</button>
                     </form>
-                    <p>Don't have an account? <a onClick={navigateSignup}>Sign Up</a></p>
+                    <p>Don't have an account? <span onClick={navigateSignup}>Sign Up</span></p>
                 </div>
             </div>
         // </Container>

@@ -9,7 +9,7 @@ import en from 'javascript-time-ago/locale/en'
 TimeAgo.addDefaultLocale(en)
 
 export default function Messaging({socket}){
-    const { servers, setServers, activeServer, activeChannel } = useChat();
+    const { servers, activeServer, activeChannel } = useChat();
     const [ newChat, setNewChats ] = useState() 
     const bottomRef = useRef(null);
     const { auth } = useAuth()
@@ -17,13 +17,14 @@ export default function Messaging({socket}){
     const { serverId, channelId } = useParams();
     const [changed, setChanged] = useState(false);
     const [ messages, setMessages ] = useState();
-    const [ room, setRoom ] = useState();
-    const {user, userId} = auth;
+    // const [ room, setRoom ] = useState();
+    const {user} = auth;
     const timeAgo = new TimeAgo('en-US')
 
     useEffect(()=>{
         socket.on('connect')
         socket.emit('join_room', channelId)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[channelId])
 
     useEffect(() => {
@@ -58,6 +59,7 @@ export default function Messaging({socket}){
             }
         }
         message()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[activeServer, activeChannel])
     
     function handleSubmit(e){

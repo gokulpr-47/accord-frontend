@@ -4,7 +4,6 @@ import {useState, useContext, useRef, useEffect} from 'react'
 import "./signup.css"
 import { useNavigate, useLocation } from 'react-router-dom'
 import UserContext from '../../Context/UserContext'
-import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 
 // const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 // const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
@@ -14,8 +13,6 @@ export default function Signup(){
 
     const userRef = useRef();
     const errRef = useRef();
-
-    const axiosPrivate = useAxiosPrivate();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -29,19 +26,19 @@ export default function Signup(){
     // })
 
     const [ email, setEmail ] = useState();
-    const [ validEmail, setValidEmail ] = useState(false);
-    const [ emailFocus, setEmailFocus ] = useState(false)
+    const [ validEmail] = useState(false);
+    const [ setEmailFocus ] = useState(false)
 
     const [ username, setUsername ] = useState();
-    const [ validUsername, setValidUsername ] = useState(false);
-    const [ usernameFocus, setUsernameFocus ] = useState(false)
+    const [ validUsername] = useState(false);
+    const [ setUsernameFocus ] = useState(false)
 
     const [ password, setPassword ] = useState();
-    const [ validPassword, setValidPassword ] = useState(false)
-    const [ passwordFocus, setPasswordFocus ] = useState(false)
+    const [ validPassword ] = useState(false)
+    const [ setPasswordFocus ] = useState(false)
     
     const [errMsg, setErrMsg] = useState('');
-    const [success, setSuccess] = useState(false);
+    // const [success, setSuccess] = useState(false);
 
     useEffect(() => {
         userRef.current.focus();
@@ -148,7 +145,7 @@ export default function Signup(){
                     </p> */}
                     <button> SIGN UP</button>
                 </form>
-                <p>Don't have an account? <a onClick={navigateSignin}>SignIn</a></p>
+                <p>Don't have an account? <span onClick={navigateSignin}>SignIn</span></p>
             </div>
         </div>
     )

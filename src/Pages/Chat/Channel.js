@@ -29,6 +29,7 @@ export default function Channel(){
     useEffect(()=>{
         const active = servers?.findIndex(server=> {return server._id === serverId})
         setActiveServer(active)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[serverId, channelId])
 
     useEffect(()=>{
@@ -58,10 +59,12 @@ export default function Channel(){
             }
         }
         getServer()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[serverId])
 
     useEffect(()=>{
         setSelected(channelId)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[activeServer])
 
     // useEffect(()=> {

@@ -1,7 +1,6 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState} from 'react'
 import CreateRoomContext from '../../../Context/CreateRoomContext'
 import JoinRoomContext from '../../../Context/JoinRoomContext';
-import InfoContext from '../../../Context/InfoContext';
 import CreateRoom from './CreateRoom'
 import JoinRoom from './JoinRoom'
 import './popup.css'
