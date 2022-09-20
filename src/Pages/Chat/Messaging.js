@@ -4,6 +4,9 @@ import useAuth from '../../hooks/useAuth'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { useParams } from 'react-router-dom'
 import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+
+TimeAgo.addDefaultLocale(en)
 
 export default function Messaging({socket}){
     const { servers, setServers, activeServer, activeChannel } = useChat();
