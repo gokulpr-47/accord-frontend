@@ -10,7 +10,7 @@ import useChat from '../../hooks/useChat';
 export default function Server(){
     const { setInfo , servers, setServers, setDbContent} = useChat();
     const logout = useLogout();
-    const { serverId, channelId } = useParams()
+    const { serverId } = useParams()
     const { auth } = useAuth()
     const axiosPrivate = useAxiosPrivate();
     
@@ -21,11 +21,11 @@ export default function Server(){
     const [selected, setSelected] = useState();
     const email = auth.email
 
-    const [ clicked, setClicked ] = useState(0);
+    const [ setClicked ] = useState(0);
 
     useEffect(()=>{
         setSelected(serverId)
-    },[])
+    },[serverId])
 
     useEffect(()=>{
         const getServer = async () => {
@@ -42,7 +42,7 @@ export default function Server(){
             }
         }
         getServer();
-    },[]) 
+    }) 
     
     const findActiveServer = async (e, server_id, server, i) => {
         const names = [];

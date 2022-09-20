@@ -7,7 +7,7 @@ import Server from './Server'
 import Channel from './Channel'
 import useChat from '../../hooks/useChat'
 
-export default props => {
+export default function Sidebar() {
     const { servers } = useChat();
     return (
         <Menu 

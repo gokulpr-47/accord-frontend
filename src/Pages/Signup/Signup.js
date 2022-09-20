@@ -6,9 +6,9 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import UserContext from '../../Context/UserContext'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 
-const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
-const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+// const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
+// const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
+// const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 
 export default function Signup(){
 
@@ -47,17 +47,17 @@ export default function Signup(){
         userRef.current.focus();
     }, [])
 
-    useEffect(() => {
-        setValidUsername(USER_REGEX.test(username));
-    }, [username])
+    // useEffect(() => {
+    //     setValidUsername(USER_REGEX.test(username));
+    // }, [username])
 
-    useEffect(() => {
-        setValidPassword(PWD_REGEX.test(password));
-    }, [password])
+    // useEffect(() => {
+    //     setValidPassword(PWD_REGEX.test(password));
+    // }, [password])
 
-    useEffect(() => {
-        setValidEmail(EMAIL_REGEX.test(email))
-    }, [email])
+    // useEffect(() => {
+    //     setValidEmail(EMAIL_REGEX.test(email))
+    // }, [email])
 
     useEffect(() => {
         setErrMsg('');

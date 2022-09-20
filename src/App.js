@@ -6,7 +6,6 @@ import PersistLogin from './Pages/PersistLogin'
 import UserContext from './Context/UserContext'
 import { AuthProvider } from './Context/AuthProvider'
 import { BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom'
-import useAuth from './hooks/useAuth'
 import { ChatProvider } from './Context/ChatContext'
 import io from 'socket.io-client'
 const socket = io.connect("http://localhost:3001")
