@@ -42,7 +42,8 @@ export default function Server(){
             }
         }
         getServer();
-    }) 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]) 
     
     const findActiveServer = async (e, server_id, server, i) => {
         const names = [];
