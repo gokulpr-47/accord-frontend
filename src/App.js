@@ -35,6 +35,7 @@ export default function App(){
 
                             <Route element={<PersistLogin/>}>   
                                 <Route path='channels' element={<Chat socket={socket}/>} />
+                                <Route path='channels/:serverId' element={<Chat socket={socket}/>} />
                                 <Route path='channels/:serverId/:channelId' element={<Chat socket={socket}/>} />
                             </Route>
                             <Route path="tests/:testId" element={<Test/>} />

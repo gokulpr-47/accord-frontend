@@ -24,12 +24,16 @@ export default function Server(){
     const [ clicked, setClicked ] = useState(0);
 
     useEffect(()=>{
+        setSelected(serverId)
+    },[])
+
+    useEffect(()=>{
         const getServer = async () => {
             
             try{
                 const response = await axiosPrivate.get('/createServer',{
                     params: { "email": email }
-                }) 
+                })
                 setServers(response.data.dbserver)
                 setDbContent(response.data.dbserver.length)
             } catch(err){
@@ -39,35 +43,39 @@ export default function Server(){
         }
         getServer();
     },[]) 
+    
+    // useEffect(()=>{
+    //     console.log('servers: ', servers)
+    // },[])
 
-    useEffect(() => {
-        const getServer = async () => {
-            try{
-                const res = await axiosPrivate.get(`/createServer/${serverId}/${channelId}`,{
-                    params: {
-                        "email": email
-                    }
-                })
-                await setServers(res.data.dbserver)
-                await setDbContent(res.data.dbserver.length)
-                if(!activeServer){
-                    const currentServer = res.data.dbserver.findIndex(server => {
-                        return server._id === serverId
-                    })
-                    // setActiveServer(currentServer)
-                    // const currentChannel = res.data.dbserver[currentServer]?.channels?.findIndex(channel => {
-                    //     return channel._id === channelId
-                    // })
-                    setSelected(serverId)
-                    // setActiveChannel(currentChannel)
+    // useEffect(() => {
+    //     const getServer = async () => {
+    //         try{
+    //             const res = await axiosPrivate.get(`/createServer/${serverId}/${channelId}`,{
+    //                 params: {
+    //                     "email": email
+    //                 }
+    //             })
+    //             await setServers(res.data.dbserver)
+    //             await setDbContent(res.data.dbserver.length)
+    //             if(!activeServer){
+    //                 const currentServer = res.data.dbserver.findIndex(server => {
+    //                     return server._id === serverId
+    //                 })
+    //                 // setActiveServer(currentServer)
+    //                 // const currentChannel = res.data.dbserver[currentServer]?.channels?.findIndex(channel => {
+    //                 //     return channel._id === channelId
+    //                 // })
+    //                 setSelected(serverId)
+    //                 // setActiveChannel(currentChannel)
                     
-                }
-            } catch(err) {
-                console.log(err)
-            }
-        }
-        getServer()
-    },[activeServer, clicked])
+    //             }
+    //         } catch(err) {
+    //             console.log(err)
+    //         }
+    //     }
+    //     getServer()
+    // },[activeServer, clicked])
     
     const findActiveServer = async (e, server_id, server, i) => {
         const names = [];
@@ -81,7 +89,7 @@ export default function Server(){
     }
 
     const element = servers?.map((server, i) =>(
-        <Link to={`/channels/${server._id}/${server.channels[0]._id}`} key={i}>
+        <Link to={`/channels/${server._id}`} key={i}>
             <div className={`${server._id === selected? "server-container active": "server-container"}`} onClick={(e)=>findActiveServer(e, server._id, server, i)}>
                 <p>{server?.server_name?.match(/\b(\w)/g).join('')}</p>
             </div>  

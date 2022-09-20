@@ -5,7 +5,7 @@ const ChatContext = createContext({});
 export const ChatProvider = ({ children }) => {
     const [ info, setInfo ] = useState(false);
     const [ servers, setServers ] = useState();
-    const [ activeServer, setActiveServer ] = useState();
+    const [ activeServer, setActiveServer ] = useState(0);
     const [ activeChannel, setActiveChannel ] = useState();
     const [ dbContent, setDbContent ] = useState();
     const [ home, setHome ] = useState();

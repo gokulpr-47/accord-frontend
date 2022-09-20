@@ -115,7 +115,7 @@ export default function Messaging({socket}){
     return(
         <div className="messaging">
             <div className="messaging-header">
-                <h2>{servers && servers[activeServer]?.channels[activeChannel]?.channel_name }</h2>
+                <h2>{servers && servers[servers.findIndex(server=> {return server._id === serverId})]?.channels[servers[servers.findIndex(server=> {return server._id === serverId})].channels.findIndex(channel=>(channel._id===channelId))]?.channel_name }</h2>
             </div>
             <div className="messaging-chatarea">
                 {element}
