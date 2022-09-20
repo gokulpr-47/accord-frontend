@@ -8,7 +8,7 @@ import useLogout from '../../hooks/useLogout'
 import useChat from '../../hooks/useChat';
 
 export default function Server(){
-    const { info, setInfo , servers, setServers, activeServer, setActiveServer, activeChannel, setActiveChannel, dbContent, setDbContent, home, setHome } = useChat();
+    const { setInfo , servers, setServers, setDbContent} = useChat();
     const logout = useLogout();
     const { serverId, channelId } = useParams()
     const { auth } = useAuth()
@@ -44,47 +44,12 @@ export default function Server(){
         getServer();
     },[]) 
     
-    // useEffect(()=>{
-    //     console.log('servers: ', servers)
-    // },[])
-
-    // useEffect(() => {
-    //     const getServer = async () => {
-    //         try{
-    //             const res = await axiosPrivate.get(`/createServer/${serverId}/${channelId}`,{
-    //                 params: {
-    //                     "email": email
-    //                 }
-    //             })
-    //             await setServers(res.data.dbserver)
-    //             await setDbContent(res.data.dbserver.length)
-    //             if(!activeServer){
-    //                 const currentServer = res.data.dbserver.findIndex(server => {
-    //                     return server._id === serverId
-    //                 })
-    //                 // setActiveServer(currentServer)
-    //                 // const currentChannel = res.data.dbserver[currentServer]?.channels?.findIndex(channel => {
-    //                 //     return channel._id === channelId
-    //                 // })
-    //                 setSelected(serverId)
-    //                 // setActiveChannel(currentChannel)
-                    
-    //             }
-    //         } catch(err) {
-    //             console.log(err)
-    //         }
-    //     }
-    //     getServer()
-    // },[activeServer, clicked])
-    
     const findActiveServer = async (e, server_id, server, i) => {
         const names = [];
         setSelected(server._id)
         servers.map((server) => (
             names.push(server.server_name.match(/\b(\w)/g).join(''))
         ))
-        
-        // setActiveServer(i)
         setClicked(prev => prev+1)
     }
 
@@ -108,11 +73,6 @@ export default function Server(){
     
     return(
         <div className="server">
-            {/* <Link to={'/channels'}>
-                <div className="home-container">
-                    <p>^</p>
-                </div>
-            </Link> */}
             {element}
             <div className="new-join" onClick={()=>pop()}>
                 <h1>+</h1>

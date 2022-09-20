@@ -14,7 +14,7 @@ export default function Chat({socket}) {
     const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 992px)' })
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 992px)' })
 
-    const { servers, activeServer, activeChannel, setActiveServer, setActiveChannel, dbContent, info } = useChat();
+    const { servers, setActiveServer, setActiveChannel, dbContent, info } = useChat();
     const { serverId, channelId } = useParams()
 
     useEffect(()=>{

@@ -1,16 +1,14 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import { slide as Menu } from 'react-burger-menu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import Split from 'react-split'
 import Server from './Server'
 import Channel from './Channel'
-import ServersContext from '../../Context/ServersContext'
 import useChat from '../../hooks/useChat'
 
 export default props => {
     const { servers } = useChat();
-    // const {servers} = useContext(ServersContext)    
     return (
         <Menu 
             isOpen={true} 
