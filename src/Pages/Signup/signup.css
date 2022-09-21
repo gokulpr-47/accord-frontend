@@ -72,7 +72,7 @@ form > button:hover{
     font-weight: 400;
 }
 
-.signup-container > p > a{
+.signup-container > p > span{
     color: var(--blue);
 }
 

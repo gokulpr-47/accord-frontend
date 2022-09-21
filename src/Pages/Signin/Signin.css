@@ -70,7 +70,7 @@ form > button{
     font-weight: 400;
 }
 
-.login-container > p > a{
+.login-container > p > span{
     color: var(--blue);
 }
 
