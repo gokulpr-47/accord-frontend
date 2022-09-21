@@ -3,10 +3,7 @@ import useChat from '../../hooks/useChat'
 import useAuth from '../../hooks/useAuth'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { useParams } from 'react-router-dom'
-import TimeAgo from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en'
-
-TimeAgo.addDefaultLocale(en)
+import ReactTimeAgo from 'react-time-ago'
 
 export default function Messaging({socket}){
     const { servers, activeServer, activeChannel } = useChat();
@@ -19,7 +16,6 @@ export default function Messaging({socket}){
     const [ messages, setMessages ] = useState();
     // const [ room, setRoom ] = useState();
     const {user} = auth;
-    const timeAgo = new TimeAgo('en-US')
 
     useEffect(()=>{
         socket.on('connect')
@@ -51,9 +47,8 @@ export default function Messaging({socket}){
         const message = async () => {
             try{
                 const response = await axiosPrivate.get(`/message/${channelId}`)
-                // console.log(response.data)
                 setMessages(response?.data) 
-                servers && setChanged(prev=> !prev)
+                setChanged(prev=> !prev)
             } catch(err){
                 console.log(err)
             }
@@ -108,7 +103,7 @@ export default function Messaging({socket}){
                     <div className="user-chat-container">
                         <div className="user-name">
                             <h4>{data.senderName}</h4>
-                            <p className="message-bottom"> {timeAgo.format(data.createdAt)} </p>
+                            <p className="message-bottom"> <ReactTimeAgo date={data.createdAt} locale="en-US" /> </p>
                         </div>
                         <div className="user-chat">
                             <p>{data.chat}</p>
