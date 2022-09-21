@@ -21,7 +21,7 @@ export default function Server(){
     const [selected, setSelected] = useState();
     const email = auth.email
 
-    const [ setClicked ] = useState(0);
+    const [ clicked, setClicked ] = useState(0);
 
     useEffect(()=>{
         setSelected(serverId)
