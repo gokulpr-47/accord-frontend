@@ -3,7 +3,8 @@ import useChat from '../../hooks/useChat'
 import useAuth from '../../hooks/useAuth'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { useParams } from 'react-router-dom'
-import TimeAgo from 'timeago-react';
+// import TimeAgo from 'timeago-react';
+import TimeAgo from 'react-timeago'
 
 export default function Messaging({socket}){
     const { servers, activeServer, activeChannel } = useChat();
@@ -103,7 +104,7 @@ export default function Messaging({socket}){
                     <div className="user-chat-container">
                         <div className="user-name">
                             <h4>{data.senderName}</h4>
-                            <p className="message-bottom"> <TimeAgo datetime={data.createdAt} /> </p>
+                            <p className="message-bottom"> <TimeAgo date={data.createdAt} /> </p>
                         </div>
                         <div className="user-chat">
                             <p>{data.chat}</p>

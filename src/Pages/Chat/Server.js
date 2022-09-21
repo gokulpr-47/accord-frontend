@@ -26,7 +26,7 @@ export default function Server(){
     useEffect(()=>{
         setSelected(serverId)
     },[serverId])
-
+    console.log(clicked)
     useEffect(()=>{
         const getServer = async () => {
             
