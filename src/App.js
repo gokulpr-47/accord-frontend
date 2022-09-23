@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-do
 import { ChatProvider } from './Context/ChatContext'
 import io from 'socket.io-client'
 const socket = io("https://acccord.herokuapp.com", {
+  withCredentials: true,
   transports: ["websocket", "polling"] // use WebSocket first, if available
 });
 
