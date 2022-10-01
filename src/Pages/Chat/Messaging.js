@@ -5,24 +5,35 @@ import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { useParams } from 'react-router-dom'
 // import TimeAgo from 'timeago-react';
 import TimeAgo from 'react-timeago'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUsers } from '@fortawesome/free-solid-svg-icons';
 
 export default function Messaging({socket}){
     const { servers, activeServer, activeChannel } = useChat();
-    const [ newChat, setNewChats ] = useState() 
+    const [ newChat, setNewChats ] = useState('') 
     const bottomRef = useRef(null);
     const { auth } = useAuth()
     const axiosPrivate = useAxiosPrivate()
     const { serverId, channelId } = useParams();
     const [changed, setChanged] = useState(false);
     const [ messages, setMessages ] = useState();
+    const [ activeUsers, setActiveUsers ] = useState(0);
     // const [ room, setRoom ] = useState();
     const {user} = auth;
 
     useEffect(()=>{
+        setActiveUsers(1)
         socket.on('connect')
-        socket.emit('join_room', channelId)
+        channelId && socket.emit('join_room', channelId)
+        socket.on('active_user', (data)=>{
+            setActiveUsers(data)
+        })
+        // channelId && socket.on('connect', ()=>{
+        //     socket.emit('join_room', channelId)
+        // })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[channelId])
+    
 
     useEffect(() => {
         socket.on('receive_message', (data) => {
@@ -32,6 +43,9 @@ export default function Messaging({socket}){
                 senderName: data.user
             }]) 
         })
+        // socket.on('active_user', (data)=>{
+        //     setActiveUsers(data)
+        // })
     },[socket])
 
     useEffect(() => {
@@ -117,7 +131,10 @@ export default function Messaging({socket}){
     return(
         <div className="messaging">
             <div className="messaging-header">
+                <div></div>
                 <h2>{servers && servers[servers.findIndex(server=> {return server._id === serverId})]?.channels[servers[servers.findIndex(server=> {return server._id === serverId})].channels.findIndex(channel=>(channel._id===channelId))]?.channel_name }</h2>
+                {/* <p>{activeUsers}</p> */}
+                <p className="activeUsers"><FontAwesomeIcon icon={faUsers} className="users_online"/>{activeUsers}</p>
             </div>
             <div className="messaging-chatarea">
                 {element}
