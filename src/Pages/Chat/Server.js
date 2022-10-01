@@ -8,9 +8,9 @@ import useLogout from '../../hooks/useLogout'
 import useChat from '../../hooks/useChat';
 
 export default function Server(){
-    const { setInfo , servers, setServers, setDbContent} = useChat();
+    const { setInfo , servers, setServers,setActiveServer, setActiveChannel, setDbContent} = useChat();
     const logout = useLogout();
-    const { serverId } = useParams()
+    const { serverId, channelId } = useParams()
     const { auth } = useAuth()
     const axiosPrivate = useAxiosPrivate();
     
@@ -21,12 +21,12 @@ export default function Server(){
     const [selected, setSelected] = useState();
     const email = auth.email
 
-    const [ clicked, setClicked ] = useState(0);
+    // const [ clicked, setClicked ] = useState(0);
 
     useEffect(()=>{
         setSelected(serverId)
     },[serverId])
-    console.log(clicked)
+    // console.log(clicked)
     useEffect(()=>{
         const getServer = async () => {
             
@@ -51,11 +51,19 @@ export default function Server(){
         servers.map((server) => (
             names.push(server.server_name.match(/\b(\w)/g).join(''))
         ))
-        setClicked(prev => prev+1)
+        // setClicked(prev => prev+1)
+        const serverIndex = servers?.findIndex(server => {
+            return server._id === serverId
+        })
+        setActiveServer(serverIndex)
+        const channelIndex = servers? servers[serverIndex]?.channels?.findIndex(channel => {
+            return channel._id === channelId    
+        }): ''
+        setActiveChannel(channelIndex)
     }
 
     const element = servers?.map((server, i) =>(
-        <Link to={`/channels/${server._id}`} key={i}>
+        <Link to={`/channels/${server._id}/${servers[i].channels[0]._id}`} key={i}>
             <div className={`${server._id === selected? "server-container active": "server-container"}`} onClick={(e)=>findActiveServer(e, server._id, server, i)}>
                 <p>{server?.server_name?.match(/\b(\w)/g).join('')}</p>
             </div>  
