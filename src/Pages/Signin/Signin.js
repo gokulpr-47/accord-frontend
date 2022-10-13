@@ -4,10 +4,12 @@ import axios from '../../api/axios'
 import { useNavigate, useLocation } from 'react-router-dom'
 import UserContext from '../../Context/UserContext'
 import useAuth from '../../hooks/useAuth'
+import useChat from '../../hooks/useChat';
 
 export default function Signin(){
 
     const { setAuth, persist, setPersist } = useAuth();
+    const { servers, setActiveServer } = useChat();
 
     const { setUser } = useContext(UserContext)
 
@@ -52,6 +54,7 @@ export default function Signin(){
             console.log(response)
             await setAuth({ email, user, accessToken, userId }) 
             await setPersist(true);
+            servers && setActiveServer(0)
             localStorage.setItem('persist', persist);
             navigate(from, { replace: true});
         } catch(err){

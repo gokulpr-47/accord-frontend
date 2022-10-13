@@ -61,7 +61,7 @@ export default function Chat({socket}) {
                         <Server/>
                         { servers || !dbContent ? 
                             <div className="desktop">
-                                <Channel/>
+                                <Channel socket={socket}/>
                                 <Messaging socket={socket}/>
                             </div>
                             :

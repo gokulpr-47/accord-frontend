@@ -9,7 +9,7 @@ import { faCopy } from '@fortawesome/free-regular-svg-icons'
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
-export default function Channel(){
+export default function Channel({socket}){
     const axiosPrivate = useAxiosPrivate()
     const { auth } = useAuth();
     const { servers, setServers, setActiveChannel } = useChat();
@@ -117,7 +117,7 @@ export default function Channel(){
 
     function channelIndex(e){
         const channels = [];
-        servers[activeServer].channels.map(channel => (
+        servers[activeServer].channels && servers[activeServer].channels.map(channel => (
             channels.push(channel.channel_name)
         ))
         setActiveChannel(channels.indexOf(e.target.innerText))
@@ -135,11 +135,20 @@ export default function Channel(){
         }
     }
 
+    const changeChannel = (channelId) => {
+        // console.log('entered changeChannel')
+        // socket.emit('leave_room', selected);
+        // socket.on('user_left',(message)=>{
+        //     console.log(message)
+        // })
+        setSelected(channelId)
+    }
+
     let element = (servers && channels) ?
         channels?.map((data, i)=>{
             return(
                 <Link to={`/channels/${serverId}/${data._id}`} key={i}>
-                    <div className={`${data._id === selected? 'channelList active': 'channelList'}`} onClick={(e)=>setSelected(data._id)}>
+                    <div className={`${data._id === selected? 'channelList active': 'channelList'}`} onClick={()=>changeChannel(data._id)}>
                         <p onClick={(e)=>channelIndex(e)}>{data.channel_name}</p>
                     </div>
                 </Link>

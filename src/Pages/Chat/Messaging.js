@@ -18,19 +18,19 @@ export default function Messaging({socket}){
     const [changed, setChanged] = useState(false);
     const [ messages, setMessages ] = useState();
     const [ activeUsers, setActiveUsers ] = useState(0);
+    const [ prevChannel, setPrevChannel ] = useState();
     // const [ room, setRoom ] = useState();
     const {user} = auth;
 
     useEffect(()=>{
         setActiveUsers(1)
         socket.on('connect')
-        channelId && socket.emit('join_room', channelId)
+        socket.emit('leave_room', prevChannel)
+        channelId && socket.emit('join_room', channelId);
         socket.on('active_user', (data)=>{
             setActiveUsers(data)
         })
-        // channelId && socket.on('connect', ()=>{
-        //     socket.emit('join_room', channelId)
-        // })
+        setPrevChannel(channelId)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[channelId])
     
