@@ -32,18 +32,22 @@ export default function Chat({socket}) {
     return (
         <>
             { isTabletOrMobile &&
-                <div id="App">
-                        <SideBar/>
-                        <>
-                            <div id="page-wrap">
-                                {
-                                    servers?
-                                        <Messaging socket={socket}/>:
-                                        <p>Loading...</p>
-                                }
-                            </div>
-                        </>
+            <>
+                            <SideBar/>
+                <div className="mobile-wrapper">
+                    <div id="App" className='mobile'>
+                            <>
+                                <div id="page-wrap" class="mobile-page-wrap">
+                                    {
+                                        servers?
+                                            <Messaging socket={socket}/>:
+                                            <p>Loading...</p>
+                                    }
+                                </div>
+                            </>
+                    </div>
                 </div>
+            </>
             }
             { isDesktopOrLaptop && 
                 <div className="chat-container">

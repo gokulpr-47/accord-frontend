@@ -17,13 +17,12 @@ export default function Messaging({socket}){
     const { serverId, channelId } = useParams();
     const [changed, setChanged] = useState(false);
     const [ messages, setMessages ] = useState();
-    const [ activeUsers, setActiveUsers ] = useState(0);
+    const [ activeUsers, setActiveUsers ] = useState(channelId? 1: 0);
     const [ prevChannel, setPrevChannel ] = useState();
     // const [ room, setRoom ] = useState();
     const {user} = auth;
 
     useEffect(()=>{
-        setActiveUsers(1)
         socket.on('connect')
         socket.emit('leave_room', prevChannel)
         channelId && socket.emit('join_room', channelId);
@@ -134,7 +133,7 @@ export default function Messaging({socket}){
                 <div></div>
                 <h2>{servers && servers[servers.findIndex(server=> {return server._id === serverId})]?.channels[servers[servers.findIndex(server=> {return server._id === serverId})].channels.findIndex(channel=>(channel._id===channelId))]?.channel_name }</h2>
                 {/* <p>{activeUsers}</p> */}
-                <p className="activeUsers"><FontAwesomeIcon icon={faUsers} className="users_online"/>{activeUsers}</p>
+                {channelId && <p className="activeUsers"><FontAwesomeIcon icon={faUsers} className="users_online"/>{activeUsers}</p>}
             </div>
             <div className="messaging-chatarea">
                 {element}

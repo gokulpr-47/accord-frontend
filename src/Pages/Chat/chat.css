@@ -21,7 +21,7 @@ body{
 }
 
 #root{
-    height:100%;
+    height:100vh;
     width: 100%;
     /* padding: 20px; */
 }
@@ -31,7 +31,7 @@ a{
 }
 
 .chat-container{
-    height: 100%;
+    height: 100vh;
 }
 
 .server{
@@ -46,12 +46,34 @@ a{
     background: #4D4D4D;
 }
 
+/* mobile */
+.mobile-wrapper{
+	background: #4D4D4D;
+	height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.bm-item{
+	display: flex !important;
+    align-items: center;
+	background-color: #3a3a3a;
+}
+
+.bm-item > .container-split{
+	display: flex;
+    height: 90%;
+    background: #3A3A3A;
+}
 
 /* Chat.js */
 
 .container-split{
     display: flex;
     height: 100%;
+	background: #3A3A3A;
 }
 
 /* Server.js  */
@@ -189,6 +211,11 @@ a{
     display: flex;
     align-items: center;
 }
+.mobile > .mobile-page-wrap > .messaging > .messaging-header > p {
+	padding-right: 0;
+	display: flex;
+	align-items:center;
+}
 .users_online{
 	margin-right: 8px;
 }
@@ -296,7 +323,7 @@ a{
 /* sidebar */
 #App {
     font-family: sans-serif;
-    height: 100vh;
+    height: 90vh;
 }
 
 #page-wrap {
@@ -318,10 +345,10 @@ a{
 
 .bm-burger-button {
 	position: fixed;
-	width: 36px;
-	height: 30px;
-	left: 16px;
-	top: 16px;
+    width: 36px;
+    height: 30px;
+    left: 16px;
+    top: 55px;
 }
 
 .bm-burger-bars {
@@ -330,9 +357,9 @@ a{
 
 .bm-cross-button {
 	height: 36px !important;
-	width: 36px !important;
-	left: 16px !important;
-	top: 16px !important;
+    width: 36px !important;
+    left: 25px !important;
+    top: 60px !important;
 }
 
 .bm-menu {
