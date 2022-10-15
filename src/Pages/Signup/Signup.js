@@ -62,17 +62,30 @@ export default function Signup(){
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-
-        const response = await axios.post('/signup',
-            JSON.stringify({ username, password, email }),
-            {
-                headers: {'Content-Type': 'application/json'},
-                withCredentials: true
+        try{
+            const response = await axios.post('/signup',
+                JSON.stringify({ username, password, email }),
+                {
+                    headers: {'Content-Type': 'application/json'},
+                    withCredentials: true
+                }
+            )
+            setUser(response.data.result.username)
+            setAuthEmail(response.data.result.email)
+            navigate(from, {replace: true})
+        } catch(err){
+            console.error(err);
+            if(!err?.response){
+                setErrMsg('No Server Response');
+            } else if( err.response?.status === 400){
+                setErrMsg('Missing email or password')
+            } else if (err.response?.status === 401) {
+                setErrMsg('Unauthorized');
+            } else {
+                setErrMsg('Login Failed');
             }
-        )
-        setUser(response.data.result.username)
-        setAuthEmail(response.data.result.email)
-        navigate(from, {replace: true})
+            errRef.current.focus();
+        }
     }
 
     function navigateSignin(){
