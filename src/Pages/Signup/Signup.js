@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from '../../api/axios'
 import {useState, useContext, useRef, useEffect} from 'react'
 // import {Container} from 'react-bootstrap'
 import "./signup.css"
