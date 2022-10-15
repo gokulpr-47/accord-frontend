@@ -8,7 +8,7 @@ import { AuthProvider } from './Context/AuthProvider'
 import { BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom'
 import { ChatProvider } from './Context/ChatContext'
 import io from 'socket.io-client'
-const socket = io("http://localhost:3001", {
+const socket = io("https://acccord.herokuapp.com", {
     withCredentials: true,
     transports: ["websocket", "polling"] // use WebSocket first, if available
 });
