@@ -208,6 +208,8 @@ a{
 	height: 100vh;
     height: -webkit-fill-available;
 	width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .messaging-header{
@@ -235,13 +237,27 @@ a{
 .messaging-chatarea{
 	overflow-y: scroll;
 	overflow-x: hidden;
-	max-height: 18%;
-	min-height: 10%;
+	height: 80vh;
 	width: 90%;
 	background: #303030;
 	border-radius: 20px;
 	margin: auto;
 	padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.messaging-chatarea-reduced{
+	overflow-y: scroll;
+	overflow-x: hidden;
+	height: 30vh;
+	width: 90%;
+	background: #303030;
+	border-radius: 20px;
+	margin: auto;
+	padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 /* width */
@@ -302,7 +318,7 @@ a{
 }
 
 .messaging-textarea{
-	margin: 15px auto 0;
+	margin: 15px auto;
 	width: 90%;
 	height: 35px;
 	background: red;
