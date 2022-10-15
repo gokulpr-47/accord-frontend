@@ -19,10 +19,8 @@ export default function Messaging({socket}){
     const [ messages, setMessages ] = useState();
     const [ activeUsers, setActiveUsers ] = useState(0);
     const [ prevChannel, setPrevChannel ] = useState();
-    const [ messageClass, setMessageClass ] = useState('messaging-chatarea')
     // const [ room, setRoom ] = useState();
     const {user} = auth;
-    const messageElement = useRef();
 
     useEffect(()=>{
         socket.on('connect')
@@ -130,15 +128,6 @@ export default function Messaging({socket}){
             )
         })
     
-    useEffect(()=>{
-        console.log(messageElement)
-    })
-
-    const addClass = () => {
-        console.log('clicked')
-        // setMessageClass('messaging-chatarea-reduced')
-        // messageElement.current.focus();
-    }
     return(
         <div className="messaging">
             <div className="messaging-header">
@@ -147,7 +136,7 @@ export default function Messaging({socket}){
                 {/* <p>{activeUsers}</p> */}
                 {channelId && <p className="activeUsers"><FontAwesomeIcon icon={faUsers} className="users_online"/>{activeUsers}</p>}
             </div>
-            <div className={`${messageClass}`}>
+            <div className='messaging-chatarea'>
                 {element}
                 <div ref={bottomRef}></div>
             </div>
@@ -160,8 +149,6 @@ export default function Messaging({socket}){
                         placeholder="Enter text here...." 
                         onChange={handleChange}
                         value={newChat}
-                        ref={messageElement}
-                        onClick={()=>addClass()}
                         />
                 </form>
             </div>

@@ -246,20 +246,6 @@ a{
     display: flex;
     flex-direction: column;
 }
-
-.messaging-chatarea-reduced{
-	overflow-y: scroll;
-	overflow-x: hidden;
-	height: 30vh;
-	width: 90%;
-	background: #303030;
-	border-radius: 20px;
-	margin: auto;
-	padding: 20px;
-    display: flex;
-    flex-direction: column;
-}
-
 /* width */
 ::-webkit-scrollbar {
 	width: 5px;
@@ -325,10 +311,10 @@ a{
 	background: #303030;
 	border-radius: 20px;
 	overflow: hidden;	
-	display: flex;
+	/* display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 0 10px;
+	padding: 0 10px; */
 }
 
 .messaging-textarea > form{
@@ -342,6 +328,7 @@ a{
 	border: none;
 	outline: none;	
 	color: white;
+    margin: 7px 9px;
 }
 
 .textarea-input:active{
