@@ -325,7 +325,7 @@ a{
 /* sidebar */
 #App {
     font-family: sans-serif;
-    height: 90vh;
+    height: 100vh;
 }
 
 #page-wrap {
@@ -346,7 +346,7 @@ a{
 }
 
 .bm-burger-button {
-	position: fixed;
+	position: absolute;
     width: 36px;
     height: 30px;
     left: 16px;
