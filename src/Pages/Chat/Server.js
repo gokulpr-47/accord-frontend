@@ -8,7 +8,7 @@ import useLogout from '../../hooks/useLogout'
 import useChat from '../../hooks/useChat';
 
 export default function Server(){
-    const { setInfo , servers, setServers,setActiveServer, setActiveChannel, setDbContent} = useChat();
+    const { setInfo , servers, setServers,setActiveServer, setActiveChannel, setDbContent, setSidebar} = useChat();
     const logout = useLogout();
     const { serverId, channelId } = useParams()
     const { auth } = useAuth()
@@ -71,8 +71,8 @@ export default function Server(){
     ))
     
     function pop(){
-        console.log('clicked')
         setInfo(prevState => !prevState)
+        setSidebar(false);
     }
     
     const signout = async () => {

@@ -6,15 +6,27 @@ import Split from 'react-split'
 import Server from './Server'
 import Channel from './Channel'
 import useChat from '../../hooks/useChat'
+import { useEffect } from 'react';
 
 export default function Sidebar() {
-    const { servers } = useChat();
+    const { servers, sidebar, setSidebar } = useChat();
+
+    const handleOnOpen = () => {
+        console.log('clicked burger')
+        setSidebar(true)
+    }
+    const handleOnClose = () => {
+        console.log('close');
+        setSidebar(false);
+    }
     return (
         <Menu 
-            isOpen={true} 
-            customBurgerIcon={  <FontAwesomeIcon icon={faBars} /> }
-            customCrossIcon={ <FontAwesomeIcon icon={faBars} /> }
+            customBurgerIcon={ <FontAwesomeIcon icon={faBars} /> }
+            customCrossIcon={ <FontAwesomeIcon icon={faBars}/> }
             className="menu-container"
+            onOpen={handleOnOpen}
+            onClose={handleOnClose}
+            isOpen={sidebar} 
         >
             <div className="chat-container">
                 <Split

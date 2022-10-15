@@ -33,9 +33,9 @@ export default function Chat({socket}) {
         <>
             { isTabletOrMobile &&
             <>
-                            <SideBar/>
-                <div className="mobile-wrapper">
-                    <div id="App" className='mobile'>
+                <SideBar/>
+                    <div className="mobile-wrapper">
+                        <div id="App" className='mobile'>
                             <>
                                 <div id="page-wrap" class="mobile-page-wrap">
                                     {

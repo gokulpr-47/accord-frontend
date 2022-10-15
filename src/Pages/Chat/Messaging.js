@@ -17,7 +17,7 @@ export default function Messaging({socket}){
     const { serverId, channelId } = useParams();
     const [changed, setChanged] = useState(false);
     const [ messages, setMessages ] = useState();
-    const [ activeUsers, setActiveUsers ] = useState(channelId? 1: 0);
+    const [ activeUsers, setActiveUsers ] = useState(0);
     const [ prevChannel, setPrevChannel ] = useState();
     // const [ room, setRoom ] = useState();
     const {user} = auth;
@@ -30,6 +30,7 @@ export default function Messaging({socket}){
             setActiveUsers(data)
         })
         setPrevChannel(channelId)
+        !prevChannel && setActiveUsers(1)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[channelId])
     

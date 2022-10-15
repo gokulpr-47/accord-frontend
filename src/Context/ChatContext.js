@@ -9,9 +9,10 @@ export const ChatProvider = ({ children }) => {
     const [ activeChannel, setActiveChannel ] = useState();
     const [ dbContent, setDbContent ] = useState();
     const [ home, setHome ] = useState();
+    const [ sidebar, setSidebar ] = useState(true)
 
     return(
-        <ChatContext.Provider value={{ info, setInfo, servers, setServers, activeServer, setActiveServer, activeChannel, setActiveChannel, dbContent, setDbContent, home, setHome }} > 
+        <ChatContext.Provider value={{ info, setInfo, servers, setServers, activeServer, setActiveServer, activeChannel, setActiveChannel, dbContent, setDbContent, home, setHome, sidebar, setSidebar }} > 
             { children }
         </ChatContext.Provider>
     )

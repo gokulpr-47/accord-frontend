@@ -204,7 +204,8 @@ a{
 
 /* Messaging.js  */
 .messaging{
-	height: 100%;
+	height: 100vh;
+    height: -webkit-fill-available;
 	width: 100%;
 }
 
@@ -345,7 +346,6 @@ a{
 .bm-item {
 	display: inline-block;
 	text-decoration: none;
-	margin-bottom: 10px;
 	color: #d1d1d1;
 	transition: color 0.2s;
 }
@@ -360,6 +360,7 @@ a{
     height: 30px;
     left: 16px;
     top: 19px;
+	z-index: 0 !important;
 }
 
 .bm-burger-bars {

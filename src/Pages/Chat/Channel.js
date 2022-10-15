@@ -12,7 +12,7 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 export default function Channel({socket}){
     const axiosPrivate = useAxiosPrivate()
     const { auth } = useAuth();
-    const { servers, setServers, setActiveChannel } = useChat();
+    const { servers, setServers, setActiveChannel, setSidebar } = useChat();
     const { serverId, channelId } = useParams();
     const [activeServer, setActiveServer] = useState()
     const navigate = useNavigate();
@@ -142,6 +142,7 @@ export default function Channel({socket}){
         //     console.log(message)
         // })
         setSelected(channelId)
+        setSidebar(false);
     }
 
     let element = (servers && channels) ?
