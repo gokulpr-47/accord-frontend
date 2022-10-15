@@ -80,11 +80,11 @@ export default function Signup(){
             } else if( err.response?.status === 400){
                 setErrMsg('Missing email or password')
             } else if (err.response?.status === 401) {
-                setErrMsg('Unauthorized');
+                setErrMsg("User doesn't exist");
             } else {
-                setErrMsg('Login Failed');
+                setErrMsg('Signup Failed'); 
             }
-            errRef.current.focus();
+            errRef.current.focus(); 
         }
     }
 
