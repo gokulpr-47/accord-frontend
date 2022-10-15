@@ -235,8 +235,8 @@ a{
 .messaging-chatarea{
 	overflow-y: scroll;
 	overflow-x: hidden;
-	height: 80vh;
-	min-height: 10vh;
+	max-height: 80%;
+	min-height: 10%;
 	width: 90%;
 	background: #303030;
 	border-radius: 20px;
