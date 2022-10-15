@@ -81,8 +81,10 @@ export default function Signup(){
                 setErrMsg('Missing email or password')
             } else if (err.response?.status === 401) {
                 setErrMsg("User doesn't exist");
-            } else {
-                setErrMsg('Signup Failed'); 
+            } else if (err.response?.status === 409){
+                setErrMsg('Another user exists with the same email'); 
+            }else{
+                setErrMsg('signup failed');
             }
             errRef.current.focus(); 
         }
