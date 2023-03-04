@@ -207,7 +207,7 @@ a{
 .messaging{
 	height: 100vh;
     height: -webkit-fill-available;
-	width: 100%;
+	width: 80%;
     display: flex;
     flex-direction: column;
 }
@@ -296,11 +296,13 @@ a{
 
 .user-chat-container{
 	margin-left:10px;
+	width: 95%;
 }
 
 .user-chat > p{
 	font-size: 14px;
 	font-weight: 300;
+    word-break: break-all;
 }
 
 .messaging-textarea{

@@ -8,7 +8,8 @@ import { AuthProvider } from './Context/AuthProvider'
 import { BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom'
 import { ChatProvider } from './Context/ChatContext'
 import io from 'socket.io-client'
-const socket = io("https://acccord.herokuapp.com", {
+// const socket = io("https://acccord.herokuapp.com", {
+const socket = io("http://localhost:3000", {
     withCredentials: true,
     transports: ["websocket", "polling"] // use WebSocket first, if available
 });
@@ -29,7 +30,7 @@ export default function App(){
                             <Route path='/Signin' element={<Signin/>} />
                             <Route path='/signup' element={<Signup/>} />
 
-                            <Route element={<PersistLogin/>}>   
+                            <Route element={<PersistLogin/>} >
                                 <Route path='channels' element={<Chat socket={socket}/>} />
                                 <Route path='channels/:serverId' element={<Chat socket={socket}/>} />
                                 <Route path='channels/:serverId/:channelId' element={<Chat socket={socket}/>} />
